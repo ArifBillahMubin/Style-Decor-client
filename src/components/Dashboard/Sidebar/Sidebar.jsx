@@ -1,104 +1,106 @@
-import { useState } from 'react'
-import { Link } from 'react-router'
-import useAuth from '../../../hooks/useAuth'
-import logo from '../../../assets/images/logo.png'
+import { useState } from "react";
+import { Link } from "react-router";
+import useAuth from "../../../hooks/useAuth";
+import logo from "../../../assets/images/logo.png";
+
 // Icons
-import { GrLogout } from 'react-icons/gr'
-import { FcSettings } from 'react-icons/fc'
-import { AiOutlineBars } from 'react-icons/ai'
-import { BsGraphUp } from 'react-icons/bs'
+import { GrLogout } from "react-icons/gr";
+import { FcSettings } from "react-icons/fc";
+import { AiOutlineBars } from "react-icons/ai";
+import { BsGraphUp } from "react-icons/bs";
 
 // User Menu
-import MenuItem from './Menu/MenuItem'
-import AdminMenu from './Menu/AdminMenu'
-import SellerMenu from './Menu/SellerMenu'
-import CustomerMenu from './Menu/CustomerMenu'
+import MenuItem from "./Menu/MenuItem";
+import AdminMenu from "./Menu/AdminMenu";
+import SellerMenu from "./Menu/SellerMenu";
+import CustomerMenu from "./Menu/CustomerMenu";
 
 const Sidebar = () => {
-  const { logOut } = useAuth()
-  const [isActive, setActive] = useState(false)
+  const { logOut } = useAuth();
+  const [isActive, setActive] = useState(false);
 
   // Sidebar Responsive Handler
   const handleToggle = () => {
-    setActive(!isActive)
-  }
+    setActive(!isActive);
+  };
 
   return (
     <>
-      {/* Small Screen Navbar, only visible till md breakpoint */}
-      <div className='bg-gray-100 text-gray-800 flex justify-between md:hidden'>
-        <div>
-          <div className='block cursor-pointer p-4 font-bold'>
-            <Link to='/'>
-              <img src={logo} alt='logo' width='100' height='100' />
-            </Link>
-          </div>
+      {/* MOBILE TOP BAR */}
+      <div className="bg-base-100 border-b border-base-300 text-text-primary flex justify-between md:hidden shadow-sm">
+        <div className="p-4">
+          <Link to="/">
+            <img src={logo} alt="logo" width="100" height="100" />
+          </Link>
         </div>
 
         <button
           onClick={handleToggle}
-          className='mobile-menu-button p-4 focus:outline-none focus:bg-gray-200'
+          className="p-4 hover:bg-base-200 transition rounded-lg"
         >
-          <AiOutlineBars className='h-5 w-5' />
+          <AiOutlineBars className="h-6 w-6 text-secondary" />
         </button>
       </div>
 
-      {/* Sidebar */}
+      {/* SIDEBAR */}
       <div
-        className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-          isActive && '-translate-x-full'
-        }  md:translate-x-0  transition duration-200 ease-in-out`}
+        className={`z-20 md:fixed flex flex-col justify-between overflow-x-hidden
+          bg-base-100 border-r border-base-300 w-74 space-y-6 px-4 py-6 absolute inset-y-0 left-0 
+          transform ${isActive ? "-translate-x-full" : "translate-x-0"} 
+          md:translate-x-0 transition duration-300 ease-in-out shadow-lg`}
       >
-        <div className='flex flex-col h-full'>
-          {/* Top Content */}
-          <div>
-            {/* Logo */}
-            <div className='w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center bg-lime-100 mx-auto'>
-              <Link to='/'>
-                <img src={logo} alt='logo' width='100' height='100' />
-              </Link>
-            </div>
+        <div className="flex flex-col h-full">
+
+          {/* LOGO */}
+          <div className="hidden md:flex items-center justify-center p-4 mb-4 bg-base-200 border border-base-300 rounded-xl shadow-sm">
+            <Link to="/">
+              <img src={logo} alt="logo" width="100" height="100" className="opacity-90 hover:opacity-100 transition" />
+            </Link>
           </div>
 
-          {/* Middle Content */}
-          <div className='flex flex-col justify-between flex-1 mt-6'>
-            {/*  Menu Items */}
-            <nav>
+          {/* MENU SECTION */}
+          <div className="flex flex-col flex-1 mt-4">
+
+            <nav className="space-y-2">
+
               {/* Common Menu */}
               <MenuItem
                 icon={BsGraphUp}
-                label='Statistics'
-                address='/dashboard'
+                label="Statistics"
+                address="/dashboard"
               />
-              {/* Role-Based Menu */}
+
+              {/* Role-based Menus */}
               <CustomerMenu />
               <SellerMenu />
               <AdminMenu />
             </nav>
           </div>
 
-          {/* Bottom Content */}
-          <div>
-            <hr />
+          {/* BOTTOM SECTION */}
+          <div className="pt-4 border-t border-base-300">
 
             <MenuItem
               icon={FcSettings}
-              label='Profile'
-              address='/dashboard/profile'
+              label="Profile"
+              address="/dashboard/profile"
             />
+
             <button
               onClick={logOut}
-              className='flex cursor-pointer w-full items-center px-4 py-2 mt-5 text-gray-600 hover:bg-gray-300   hover:text-gray-700 transition-colors duration-300 transform'
+              className="flex items-center w-full px-4 py-3 mt-3 rounded-lg 
+                text-text-primary hover:bg-base-200 transition font-medium gap-3"
             >
-              <GrLogout className='w-5 h-5' />
+              <GrLogout className="w-5 h-5 text-secondary" />
 
-              <span className='mx-4 font-medium'>Logout</span>
+              Logout
             </button>
           </div>
+
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
