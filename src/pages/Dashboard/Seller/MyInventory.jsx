@@ -1,4 +1,4 @@
-import PlantDataRow from '../../../components/Dashboard/TableRows/PlantDataRow'
+import PlantDataRow from '../../../components/Dashboard/TableRows/ServiceDataRow'
 
 const MyInventory = () => {
   return (
