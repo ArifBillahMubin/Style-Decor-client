@@ -7,38 +7,44 @@ import { TbFidgetSpinner } from "react-icons/tb";
 import useAuth from "../../hooks/useAuth";
 import Navbar from "../../components/Shared/Navbar/Navbar";
 import Footer from "../../components/Shared/Footer/Footer";
+import { useForm } from "react-hook-form";
 
-// Banner image — update path
+// Banner image — change this to your actual file
 import loginBanner from "../../assets/images/signup-banner.jpg";
 
 const Login = () => {
   const { signIn, signInWithGoogle, loading, user, setLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state || "/";
 
-  if (loading) return <div className="mt-20 text-center">Loading...</div>;
+  // React Hook Form Setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  // if (loading) return <LoadingSpinner />;
   if (user) return <Navigate to={from} replace={true} />;
 
-  // Form submit handler
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const email = form.email.value;
-    const password = form.password.value;
+  // Handle Email Login
+  const onSubmit = async (data) => {
+    const { email, password } = data;
 
     try {
       await signIn(email, password);
+
       navigate(from, { replace: true });
       toast.success("Login Successful");
     } catch (err) {
       console.log(err);
       toast.error(err?.message);
+      setLoading(false);
     }
   };
 
-  // Google Sign-in handler
+  // Handle Google Login
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
@@ -86,19 +92,16 @@ const Login = () => {
           {/* RIGHT SIDE: LOGIN FORM */}
           <div className="flex flex-col justify-center p-6 sm:p-10">
             <div className="mb-6 text-center md:text-left">
-              <h1 className="my-2 text-3xl font-bold text-secondary">
-                Log In
-              </h1>
+              <h1 className="my-2 text-3xl font-bold text-secondary">Log In</h1>
               <p className="text-sm text-gray-500">
                 Sign in to access your account
               </p>
             </div>
 
-            <form
-              onSubmit={handleSubmit}
-              className="space-y-6"
-            >
+            {/* FORM START */}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="space-y-4">
+
                 {/* Email */}
                 <div>
                   <label htmlFor="email" className="block mb-2 text-sm text-gray-700">
@@ -106,12 +109,21 @@ const Login = () => {
                   </label>
                   <input
                     type="email"
-                    name="email"
                     id="email"
-                    required
                     placeholder="Enter your email"
-                    className="w-full px-3 py-2 border rounded-md border-base-300 focus:outline-primary bg-base-100 text-gray-900"
+                    className="w-full px-3 py-2 border rounded-md border-base-300 
+                    focus:outline-primary bg-base-100 text-gray-900"
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: "Enter a valid email",
+                      },
+                    })}
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                  )}
                 </div>
 
                 {/* Password */}
@@ -124,14 +136,27 @@ const Login = () => {
                       Forgot password?
                     </span>
                   </div>
+
                   <input
                     type="password"
-                    name="password"
                     id="password"
-                    required
                     placeholder="*******"
-                    className="w-full px-3 py-2 border rounded-md border-base-300 focus:outline-primary bg-base-100 text-gray-900"
+                    autoComplete="current-password"
+                    className="w-full px-3 py-2 border rounded-md border-base-300 
+                    focus:outline-primary bg-base-100 text-gray-900"
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters",
+                      },
+                    })}
                   />
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -149,14 +174,13 @@ const Login = () => {
                 </button>
               </div>
             </form>
+            {/* FORM END */}
 
             {/* Divider */}
             <div className="flex items-center pt-4 space-x-1">
               <div className="flex-1 h-px bg-base-300"></div>
-              <p className="px-3 text-sm text-gray-500">
-                Or sign in with
-              </p>
-              <div className="flex-1 h-px bg-base-300"></div>
+              <p className="px-3 text-sm text-gray-500">Or sign in with</p>
+              <div className="flex-1 h-ppx bg-base-300"></div>
             </div>
 
             {/* Google Login */}
