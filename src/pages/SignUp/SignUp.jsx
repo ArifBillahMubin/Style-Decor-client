@@ -11,6 +11,7 @@ import Footer from "../../components/Shared/Footer/Footer";
 
 // Change path if needed
 import signupBanner from "../../assets/images/signup-banner.jpg";
+import { imageUpload } from "../../../utils";
 
 const SignUp = () => {
   const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth();
@@ -27,14 +28,21 @@ const SignUp = () => {
 
   // Handle form submit
   const onSubmit = async (data) => {
-    const { name, email, password } = data;
+    const { name, email, password ,image} = data;
+    console.log(data);
+    const imageFile = image[0];
+    console.log(imageFile);
 
     try {
+      // Upload image to imageBb
+      const imageURL = await imageUpload(imageFile);
+
+      // Create user
       await createUser(email, password);
 
       await updateUserProfile(
         name,
-        "https://lh3.googleusercontent.com/a/ACg8ocKUMU3XIX-JSUB80Gj_bYIWfYudpibgdwZE1xqmAGxHASgdvCZZ=s96-c"
+        imageURL
       );
 
       navigate(from, { replace: true });
@@ -121,6 +129,7 @@ const SignUp = () => {
                     Profile Image
                   </label>
                   <input
+                    name='image'
                     type="file"
                     accept="image/*"
                     className="block w-full text-sm text-gray-500
@@ -131,6 +140,7 @@ const SignUp = () => {
                       hover:file:bg-primary/20
                       bg-base-100 border border-dashed border-base-300 rounded-md cursor-pointer
                       focus:outline-none focus:ring-2 focus:ring-primary/40 py-2"
+                    {...register("image", { required: "Profile image is required" })}
                   />
                   <p className="text-xs text-gray-400 mt-1">
                     PNG, JPG or JPEG (max 2MB)
