@@ -22,7 +22,7 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
     formState: { errors }
   } = useForm();
 
-  
+
   const onSubmit = (formData) => {
     const paymentInfo = {
       serviceId: _id,
@@ -33,7 +33,6 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
       unit,
       image,
       rating,
-      quantity: 1,
 
       bookingDate: formData.bookingDate,
       location: formData.location,

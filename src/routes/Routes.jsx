@@ -15,6 +15,7 @@ import { createBrowserRouter } from 'react-router'
 import ManageServices from '../pages/Dashboard/Admin/ManageServices'
 import ServicesPage from '../pages/Services/ServicesPage'
 import ServiceDetailsPage from '../pages/Services/ServiceDetailsPage'
+import PaymentSuccess from '../pages/Payment/PaymentSuccess'
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
         path: '/services/:id',
         element: <ServiceDetailsPage></ServiceDetailsPage>,
       },
+      {
+        path: '/payment-success',
+        element: <PaymentSuccess></PaymentSuccess>
+      }
     ],
   },
   { path: '/login', element: <Login /> },
