@@ -71,6 +71,7 @@ const ServiceDataRow = ({ service ,refetch}) => {
           isOpen={isEditOpen}
           setIsEditModalOpen={setEditOpen}
           service={service}
+          refetch={refetch}
         />
       </td>
     </tr>

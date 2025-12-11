@@ -6,7 +6,6 @@ import axios from "axios";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const ManageServices = () => {
-    // Demo services (will replace with API later)
     const { data: services = [], isLoading, refetch } = useQuery({
         queryKey: ['all services'],
         queryFn: async () => {
