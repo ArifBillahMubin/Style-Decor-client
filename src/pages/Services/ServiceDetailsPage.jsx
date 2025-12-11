@@ -2,18 +2,31 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router";
 import { motion } from "framer-motion";
+import { useState } from "react";
+
 import Container from "../../components/Shared/Container";
 import LoadingSpinner from "../../components/Shared/LoadingSpinner";
+import useAuth from "../../hooks/useAuth";
+import PurchaseModal from "../../components/Modal/PurchaseModal";
+import toast from "react-hot-toast";
 
 const ServiceDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth();
 
-    // FETCH SINGLE SERVICE
+    // MODAL STATE
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
+    // FETCH SERVICE DETAILS
     const { data: service, isLoading } = useQuery({
         queryKey: ["service-details", id],
         queryFn: async () => {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL}/services/${id}`);
+            const res = await axios.get(
+                `${import.meta.env.VITE_API_URL}/services/${id}`
+            );
             return res.data;
         },
     });
@@ -46,7 +59,6 @@ const ServiceDetailsPage = () => {
                     transition={{ duration: 0.4 }}
                     className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start"
                 >
-
                     {/* LEFT: IMAGE */}
                     <div className="w-full h-[420px] rounded-2xl overflow-hidden shadow-lg">
                         <motion.img
@@ -62,7 +74,7 @@ const ServiceDetailsPage = () => {
                     {/* RIGHT: DETAILS */}
                     <div className="space-y-8">
 
-                        {/* TITLE & BADGES */}
+                        {/* TITLE + BADGES */}
                         <div>
                             <h1 className="text-4xl font-bold text-gray-900 mb-3">
                                 {service.service_name}
@@ -98,16 +110,23 @@ const ServiceDetailsPage = () => {
                                 <p className="text-gray-600 text-sm">Price</p>
                                 <h2 className="text-3xl font-bold text-primary">
                                     {service.cost} BDT
-                                    <span className="text-gray-500 text-sm"> / {service.unit}</span>
+                                    <span className="text-gray-500 text-sm">
+                                        {" "} / {service.unit}
+                                    </span>
                                 </h2>
                             </div>
 
                             <button
-                                className="
-                                    w-full py-3 bg-primary text-white rounded-xl 
-                                    text-lg font-medium hover:bg-secondary 
-                                    transition-all duration-200
-                                "
+                                onClick={() => {
+                                    if (!user) {
+                                        toast.error("Please login to book this service");
+                                        return navigate("/login", {
+                                            state: `/services/${id}`,
+                                        });
+                                    }
+                                    openModal();
+                                }}
+                                className="w-full py-3 bg-primary text-white rounded-xl text-lg font-medium hover:bg-secondary transition-all duration-200"
                             >
                                 Book This Service
                             </button>
@@ -115,6 +134,14 @@ const ServiceDetailsPage = () => {
                     </div>
                 </motion.div>
             </div>
+
+            {/* BOOKING MODAL */}
+            <PurchaseModal
+                isOpen={isModalOpen}
+                closeModal={closeModal}
+                service={service}
+                user={user}
+            />
         </Container>
     );
 };

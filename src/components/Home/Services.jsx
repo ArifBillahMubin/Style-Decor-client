@@ -5,17 +5,26 @@ import axios from "axios";
 import Container from "../Shared/Container";
 import ServiceCard from "./ServiceCard";
 import { Link } from "react-router";
+import LoadingSpinner from "../Shared/LoadingSpinner";
 
 const Services = () => {
-  const { data: services = [], isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["landing-services"],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/services`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/services-home-filter`,
+        {
+          params: {
+            limit: 6,       // only 6 services from backend
+            sort: "rating",   // sort by rating
+          },
+        }
+      );
       return res.data;
     },
   });
 
-  const limited = services.slice(0, 6);
+  const services = data?.services || [];
 
   return (
     <section className="py-16 bg-base-100">
@@ -28,7 +37,7 @@ const Services = () => {
         </p>
 
         {isLoading ? (
-          <p className="text-center text-gray-500">Loading...</p>
+          <LoadingSpinner></LoadingSpinner>
         ) : (
           <>
             <Swiper
@@ -44,7 +53,7 @@ const Services = () => {
                 1280: { slidesPerView: 4 },
               }}
             >
-              {limited.map((service) => (
+              {services.map((service) => (
                 <SwiperSlide key={service._id}>
                   <ServiceCard service={service} />
                 </SwiperSlide>
