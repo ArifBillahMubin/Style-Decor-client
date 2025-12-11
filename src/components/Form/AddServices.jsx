@@ -1,10 +1,67 @@
+import React from "react";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import { imageUpload } from "../../../utils";
+import useAuth from "../../hooks/useAuth";
+
 const AddServices = () => {
+  const { user } = useAuth();
+
+  //TanStack Mutation for adding service
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (payload) =>
+      await axios.post(`${import.meta.env.VITE_API_URL}/service`, payload),
+
+    onSuccess: () => {
+      toast.success("Service added successfully!");
+    },
+
+    onError: (error) => {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+      console.log(error);
+    },
+  });
+
+  //React Hook Form 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  // savedb data
+  const onSubmit = async (data) => {
+    const imageFile = data.image?.[0];
+    try {
+    const imageURL = await imageUpload(imageFile);
+    const payload = {
+      service_name: data.service_name,
+      category: data.category,
+      description: data.description,
+      cost: Number(data.cost),
+      unit: data.unit,
+      image: imageURL, 
+      createdByEmail: user?.email 
+    };
+
+      await mutateAsync(payload);
+      reset();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center 
     bg-base-200 rounded-xl">
 
-      <form className="bg-base-100 w-full max-w-5xl p-10 rounded-xl shadow-lg border border-base-300">
-
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-base-100 w-full max-w-5xl p-10 rounded-xl shadow-lg border border-base-300"
+      >
         <h2 className="text-3xl font-semibold text-secondary mb-8">
           Add New Decoration Service
         </h2>
@@ -16,30 +73,26 @@ const AddServices = () => {
 
             {/* Service Name */}
             <div className="space-y-1 text-sm">
-              <label htmlFor="service_name" className="block text-text-primary">
-                Service Name
-              </label>
+              <label className="block text-text-primary">Service Name</label>
               <input
-                className="w-full px-4 py-3 border border-base-300 rounded-md 
-                focus:outline-primary bg-base-100"
-                name="service_name"
-                id="service_name"
                 type="text"
+                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
+                focus:outline-primary"
                 placeholder="e.g., Wedding Stage Decoration"
-                required
+                {...register("service_name", { required: "Service name is required" })}
               />
+              {errors.service_name && (
+                <p className="text-red-500 text-sm">{errors.service_name.message}</p>
+              )}
             </div>
 
-            {/* Service Category */}
+            {/* Category */}
             <div className="space-y-1 text-sm">
-              <label htmlFor="category" className="block text-text-primary">
-                Category
-              </label>
+              <label className="block text-text-primary">Category</label>
               <select
-                required
-                className="w-full px-4 py-3 border border-base-300 rounded-md 
-                bg-base-100 focus:outline-primary"
-                name="category"
+                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
+                focus:outline-primary"
+                {...register("category", { required: "Category is required" })}
               >
                 <option value="home">Home Decoration</option>
                 <option value="wedding">Wedding</option>
@@ -48,20 +101,21 @@ const AddServices = () => {
                 <option value="ceremony">Ceremony</option>
                 <option value="birthday">Birthday Events</option>
               </select>
+
+              {errors.category && (
+                <p className="text-red-500 text-sm">{errors.category.message}</p>
+              )}
             </div>
 
             {/* Description */}
             <div className="space-y-1 text-sm">
-              <label htmlFor="description" className="block text-text-primary">
-                Description
-              </label>
+              <label className="block text-text-primary">Description</label>
 
               <textarea
-                id="description"
+                className="w-full h-32 px-4 py-3 border border-base-300 rounded-md bg-base-100 
+                focus:outline-primary"
                 placeholder="Describe the decoration service..."
-                className="block rounded-md w-full h-32 px-4 py-3 border border-base-300 
-                bg-base-100 focus:outline-primary"
-                name="description"
+                {...register("description")}
               ></textarea>
             </div>
           </div>
@@ -69,72 +123,72 @@ const AddServices = () => {
           {/* RIGHT SIDE */}
           <div className="space-y-6 flex flex-col">
 
-            {/* Cost & Unit */}
+            {/* Cost , Unit */}
             <div className="flex justify-between gap-2">
 
               {/* Cost */}
               <div className="space-y-1 text-sm w-full">
-                <label htmlFor="cost" className="block text-text-primary">
-                  Cost (BDT)
-                </label>
+                <label className="block text-text-primary">Cost (BDT)</label>
                 <input
-                  className="w-full px-4 py-3 border border-base-300 rounded-md 
-                  bg-base-100 focus:outline-primary"
-                  name="cost"
-                  id="cost"
                   type="number"
                   placeholder="e.g., 15000"
-                  required
+                  className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
+                  focus:outline-primary"
+                  {...register("cost", { required: "Cost is required" })}
                 />
+                {errors.cost && (
+                  <p className="text-red-500 text-sm">{errors.cost.message}</p>
+                )}
               </div>
 
               {/* Unit */}
               <div className="space-y-1 text-sm w-full">
-                <label htmlFor="unit" className="block text-text-primary">
-                  Unit
-                </label>
+                <label className="block text-text-primary">Unit</label>
                 <input
-                  className="w-full px-4 py-3 border border-base-300 rounded-md 
-                  bg-base-100 focus:outline-primary"
-                  name="unit"
-                  id="unit"
                   type="text"
                   placeholder="e.g., per event / per sqft"
-                  required
+                  className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
+                  focus:outline-primary"
+                  {...register("unit", { required: "Unit is required" })}
                 />
+                {errors.unit && (
+                  <p className="text-red-500 text-sm">{errors.unit.message}</p>
+                )}
               </div>
             </div>
 
             {/* Image Upload */}
-            <div className="p-4 w-full rounded-lg border border-base-300 bg-base-100">
-              <label className="block text-text-primary mb-2">Service Image</label>
+            <div className="p-4 border border-base-300 bg-base-100 rounded-lg">
+              <label className="block text-text-primary mb-2">Service Image *</label>
 
               <div className="file_upload px-5 py-3 border-2 border-dotted border-base-300 rounded-lg">
-                <div className="flex flex-col w-max mx-auto text-center">
-                  <label>
-                    <input
-                      className="hidden"
-                      type="file"
-                      name="image"
-                      id="image"
-                      accept="image/*"
-                    />
-                    <div className="bg-primary text-white rounded font-semibold cursor-pointer p-2 px-5 
-                    hover:bg-secondary transition">
-                      Upload Image
-                    </div>
-                  </label>
-                </div>
+                <label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    {...register("image", { required: "Image is required" })}
+                  />
+                  <div className="bg-primary text-white rounded font-semibold cursor-pointer 
+                  p-2 px-5 hover:bg-secondary transition">
+                    Upload Image
+                  </div>
+                </label>
               </div>
+
+              {errors.image && (
+                <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
+              )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full cursor-pointer p-3 mt-3 text-center font-medium text-white 
-              rounded-md bg-primary hover:bg-secondary transition shadow-md"
+              disabled={isPending}
+              className="w-full p-3 text-center font-medium text-white rounded-md 
+              bg-primary hover:bg-secondary transition shadow-md"
             >
-              Save Service
+              {isPending ? "Saving..." : "Save Service"}
             </button>
           </div>
         </div>
