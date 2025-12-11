@@ -11,7 +11,7 @@ import Footer from "../../components/Shared/Footer/Footer";
 
 // Change path if needed
 import signupBanner from "../../assets/images/signup-banner.jpg";
-import { imageUpload } from "../../../utils";
+import { imageUpload, saveOrUpdateUser } from "../../../utils";
 
 const SignUp = () => {
   const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth();
@@ -28,7 +28,7 @@ const SignUp = () => {
 
   // Handle form submit
   const onSubmit = async (data) => {
-    const { name, email, password ,image} = data;
+    const { name, email, password, image } = data;
     console.log(data);
     const imageFile = image[0];
     console.log(imageFile);
@@ -39,6 +39,9 @@ const SignUp = () => {
 
       // Create user
       await createUser(email, password);
+
+      //save in db user data
+      await saveOrUpdateUser({ name, email, imageURL })
 
       await updateUserProfile(
         name,
@@ -56,7 +59,11 @@ const SignUp = () => {
   // Google Sign-up
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      const { user } = await signInWithGoogle();
+
+      //save user to db
+      await saveOrUpdateUser({ name: user?.displayName, email: user?.email, imageUrl: user?.photoURL })
+
       navigate(from, { replace: true });
       toast.success("Signup Successful");
     } catch (err) {

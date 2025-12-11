@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 
 // Banner image — change this to your actual file
 import loginBanner from "../../assets/images/signup-banner.jpg";
+import { saveOrUpdateUser } from "../../../utils";
 
 const Login = () => {
   const { signIn, signInWithGoogle, loading, user, setLoading } = useAuth();
@@ -33,7 +34,10 @@ const Login = () => {
     const { email, password } = data;
 
     try {
-      await signIn(email, password);
+      const { user } = await signIn(email, password);
+
+      //save user to db
+      await saveOrUpdateUser({name: user?.displayName, email: user?.email, imageUrl: user?.photoURL})
 
       navigate(from, { replace: true });
       toast.success("Login Successful");
@@ -47,7 +51,11 @@ const Login = () => {
   // Handle Google Login
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      const { user } =await signInWithGoogle();
+
+      //save user to db
+      await saveOrUpdateUser({name: user?.displayName, email: user?.email, imageUrl: user?.photoURL})
+
       navigate(from, { replace: true });
       toast.success("Login Successful");
     } catch (err) {
