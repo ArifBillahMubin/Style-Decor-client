@@ -1,12 +1,13 @@
 import Hero from '../../components/Home/Hero'
-import Plants from '../../components/Home/Plants'
+import Services from '../../components/Home/Services'
+import Plants from '../../components/Home/Services'
 
 const Home = () => {
   return (
     <div>
       <Hero></Hero>
-      <Plants />
-      
+      <Services></Services>
+
     </div>
   )
 }
