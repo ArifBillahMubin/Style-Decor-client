@@ -9,7 +9,7 @@ import useAuth from "../../hooks/useAuth";
 const AddServices = () => {
   const { user } = useAuth();
 
-  //TanStack Mutation for adding service
+  // TanStack Mutation for adding service
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (payload) =>
       await axios.post(`${import.meta.env.VITE_API_URL}/service`, payload),
@@ -24,7 +24,7 @@ const AddServices = () => {
     },
   });
 
-  //React Hook Form 
+  // React Hook Form
   const {
     register,
     handleSubmit,
@@ -32,20 +32,22 @@ const AddServices = () => {
     formState: { errors },
   } = useForm();
 
-  // savedb data
+  // Submit Data
   const onSubmit = async (data) => {
-    const imageFile = data.image?.[0];
     try {
-    const imageURL = await imageUpload(imageFile);
-    const payload = {
-      service_name: data.service_name,
-      category: data.category,
-      description: data.description,
-      cost: Number(data.cost),
-      unit: data.unit,
-      image: imageURL, 
-      createdByEmail: user?.email 
-    };
+      const imageFile = data.image[0];
+      const imageURL = await imageUpload(imageFile);
+
+      const payload = {
+        service_name: data.service_name,
+        category: data.category,
+        description: data.description,
+        cost: Number(data.cost),
+        unit: data.unit,
+        image: imageURL,
+        rating: Number(data.rating),
+        createdByEmail: user?.email,
+      };
 
       await mutateAsync(payload);
       reset();
@@ -55,9 +57,7 @@ const AddServices = () => {
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-40px)] flex flex-col justify-center items-center 
-    bg-base-200 rounded-xl">
-
+    <div className="w-full min-h-[calc(100vh-40px)] flex justify-center items-center bg-base-200 py-10 rounded-xl">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="bg-base-100 w-full max-w-5xl p-10 rounded-xl shadow-lg border border-base-300"
@@ -70,15 +70,13 @@ const AddServices = () => {
 
           {/* LEFT SIDE */}
           <div className="space-y-6">
-
             {/* Service Name */}
-            <div className="space-y-1 text-sm">
+            <div>
               <label className="block text-text-primary">Service Name</label>
               <input
                 type="text"
-                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
-                focus:outline-primary"
-                placeholder="e.g., Wedding Stage Decoration"
+                placeholder="Wedding Stage Decoration"
+                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 focus:outline-primary"
                 {...register("service_name", { required: "Service name is required" })}
               />
               {errors.service_name && (
@@ -87,80 +85,88 @@ const AddServices = () => {
             </div>
 
             {/* Category */}
-            <div className="space-y-1 text-sm">
+            <div>
               <label className="block text-text-primary">Category</label>
               <select
-                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
-                focus:outline-primary"
+                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 focus:outline-primary"
                 {...register("category", { required: "Category is required" })}
               >
+                <option value="">Select Category</option>
                 <option value="home">Home Decoration</option>
                 <option value="wedding">Wedding</option>
-                <option value="office">Office</option>
-                <option value="seminar">Seminar</option>
                 <option value="ceremony">Ceremony</option>
-                <option value="birthday">Birthday Events</option>
+                <option value="birthday">Birthday</option>
+                <option value="seminar">Seminar</option>
+                <option value="office">Office Decoration</option>
               </select>
-
               {errors.category && (
                 <p className="text-red-500 text-sm">{errors.category.message}</p>
               )}
             </div>
 
             {/* Description */}
-            <div className="space-y-1 text-sm">
+            <div>
               <label className="block text-text-primary">Description</label>
-
               <textarea
-                className="w-full h-32 px-4 py-3 border border-base-300 rounded-md bg-base-100 
-                focus:outline-primary"
+                className="w-full h-32 px-4 py-3 border border-base-300 rounded-md bg-base-100 focus:outline-primary"
                 placeholder="Describe the decoration service..."
                 {...register("description")}
-              ></textarea>
+              />
+            </div>
+
+            {/* Rating */}
+            <div>
+              <label className="block text-text-primary">Rating (0–5)</label>
+              <input
+                type="number"
+                step="0.1"
+                placeholder="4.5"
+                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100"
+                {...register("rating", {
+                  required: "Rating is required",
+                  min: { value: 0, message: "Min rating 0" },
+                  max: { value: 5, message: "Max rating 5" },
+                })}
+              />
+              {errors.rating && (
+                <p className="text-red-500 text-sm">{errors.rating.message}</p>
+              )}
             </div>
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="space-y-6 flex flex-col">
+          <div className="space-y-6">
+            {/* Cost */}
+            <div>
+              <label className="block text-text-primary">Cost (BDT)</label>
+              <input
+                type="number"
+                placeholder="15000"
+                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100"
+                {...register("cost", { required: "Cost is required" })}
+              />
+              {errors.cost && (
+                <p className="text-red-500 text-sm">{errors.cost.message}</p>
+              )}
+            </div>
 
-            {/* Cost , Unit */}
-            <div className="flex justify-between gap-2">
-
-              {/* Cost */}
-              <div className="space-y-1 text-sm w-full">
-                <label className="block text-text-primary">Cost (BDT)</label>
-                <input
-                  type="number"
-                  placeholder="e.g., 15000"
-                  className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
-                  focus:outline-primary"
-                  {...register("cost", { required: "Cost is required" })}
-                />
-                {errors.cost && (
-                  <p className="text-red-500 text-sm">{errors.cost.message}</p>
-                )}
-              </div>
-
-              {/* Unit */}
-              <div className="space-y-1 text-sm w-full">
-                <label className="block text-text-primary">Unit</label>
-                <input
-                  type="text"
-                  placeholder="e.g., per event / per sqft"
-                  className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100 
-                  focus:outline-primary"
-                  {...register("unit", { required: "Unit is required" })}
-                />
-                {errors.unit && (
-                  <p className="text-red-500 text-sm">{errors.unit.message}</p>
-                )}
-              </div>
+            {/* Unit */}
+            <div>
+              <label className="block text-text-primary">Unit</label>
+              <input
+                type="text"
+                placeholder="per event / per sqft"
+                className="w-full px-4 py-3 border border-base-300 rounded-md bg-base-100"
+                {...register("unit", { required: "Unit is required" })}
+              />
+              {errors.unit && (
+                <p className="text-red-500 text-sm">{errors.unit.message}</p>
+              )}
             </div>
 
             {/* Image Upload */}
             <div className="p-4 border border-base-300 bg-base-100 rounded-lg">
-              <label className="block text-text-primary mb-2">Service Image *</label>
-
+              <label className="block text-text-primary mb-1">Service Image *</label>
               <div className="file_upload px-5 py-3 border-2 border-dotted border-base-300 rounded-lg">
                 <label>
                   <input
@@ -175,7 +181,6 @@ const AddServices = () => {
                   </div>
                 </label>
               </div>
-
               {errors.image && (
                 <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
               )}
@@ -191,6 +196,7 @@ const AddServices = () => {
               {isPending ? "Saving..." : "Save Service"}
             </button>
           </div>
+
         </div>
       </form>
     </div>

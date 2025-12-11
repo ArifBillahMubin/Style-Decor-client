@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import DeleteModal from '../../Modal/DeleteModal'
+import DeleteModal from '../../Modal/DeleteServiceModal'
 const CustomerOrderDataRow = () => {
   let [isOpen, setIsOpen] = useState(false)
   const closeModal = () => setIsOpen(false)

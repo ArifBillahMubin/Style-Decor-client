@@ -1,19 +1,11 @@
 import { useState } from "react";
-import DeleteModal from "../../Modal/DeleteModal";
 import UpdateServiceModal from "../../Modal/UpdateServiceModal";
+import DeleteServiceModal from "../../Modal/DeleteServiceModal";
 
-const ServiceDataRow = () => {
+const ServiceDataRow = ({ service }) => {
   const [isDeleteOpen, setDeleteOpen] = useState(false);
   const [isEditOpen, setEditOpen] = useState(false);
 
-  // Demo Data (Replace later with DB data)
-  const service = {
-    image: "https://i.ibb.co/Wg4cnVf/wedding-decor.jpg",
-    name: "Wedding Stage Decoration",
-    category: "Wedding",
-    cost: 25000,
-    unit: "per event",
-  };
 
   return (
     <tr className="bg-base-100 border-b border-base-300 hover:bg-base-200 transition">
@@ -29,7 +21,7 @@ const ServiceDataRow = () => {
 
       {/* NAME */}
       <td className="px-5 py-5 text-sm font-medium text-text-primary">
-        {service.name}
+        {service.service_name}
       </td>
 
       {/* CATEGORY */}
@@ -57,7 +49,11 @@ const ServiceDataRow = () => {
         </button>
 
         {/* Delete Modal */}
-        <DeleteModal isOpen={isDeleteOpen} closeModal={() => setDeleteOpen(false)} />
+        <DeleteServiceModal
+          isOpen={isDeleteOpen}
+          closeModal={() => setDeleteOpen(false)}
+          id={service._id}
+        />
       </td>
 
       {/* UPDATE BUTTON */}

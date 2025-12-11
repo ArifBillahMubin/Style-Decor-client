@@ -1,29 +1,21 @@
 import React from "react";
 import AddServices from "../../../components/Form/AddServices";
 import ServiceDataRow from "../../../components/Dashboard/TableRows/ServiceDataRow";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const ManageServices = () => {
     // Demo services (will replace with API later)
-    const demoServices = [
-        {
-            _id: "1",
-            name: "Wedding Stage Decoration",
-            category: "wedding",
-            cost: 25000,
-            unit: "per event",
-            createdByEmail: "admin@styledecor.com",
-            image: "https://i.ibb.co/Wg4cnVf/wedding-decor.jpg",
-        },
-        {
-            _id: "2",
-            name: "Home Floral Setup",
-            category: "home",
-            cost: 8000,
-            unit: "per room",
-            createdByEmail: "admin@styledecor.com",
-            image: "https://i.ibb.co/z7HgJdD/home-decor.jpg",
-        },
-    ];
+    const { data: services = [], isLoading } = useQuery({
+        queryKey: ['all services'],
+        queryFn: async () => {
+            const result = await axios(`${import.meta.env.VITE_API_URL}/services`);
+            return result.data
+        }
+    })
+
+    if (isLoading) return <LoadingSpinner></LoadingSpinner>
 
     return (
         <div className="w-full h-full">
@@ -63,7 +55,7 @@ const ManageServices = () => {
 
                     {/* TABLE BODY (Calling your component row-by-row) */}
                     <tbody>
-                        {demoServices.map((service) => (
+                        {services.map((service) => (
                             <ServiceDataRow key={service._id} service={service} />
                         ))}
                     </tbody>
