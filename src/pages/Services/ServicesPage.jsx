@@ -70,7 +70,6 @@ const ServicesPage = () => {
     return (
         <Container>
             <div className="pt-18 pb-20">
-
                 {/* PAGE TITLE */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold tracking-tight text-secondary">

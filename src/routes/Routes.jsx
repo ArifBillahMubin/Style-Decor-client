@@ -2,7 +2,6 @@ import Home from '../pages/Home/Home'
 import ErrorPage from '../pages/ErrorPage'
 import Login from '../pages/Login/Login'
 import SignUp from '../pages/SignUp/SignUp'
-import PlantDetails from '../pages/PlantDetails/PlantDetails'
 import PrivateRoute from './PrivateRoute'
 import DashboardLayout from '../layouts/DashboardLayout'
 import ManageUsers from '../pages/Dashboard/Admin/ManageUsers'
@@ -15,6 +14,7 @@ import MyOrders from '../pages/Dashboard/Customer/MyOrders'
 import { createBrowserRouter } from 'react-router'
 import ManageServices from '../pages/Dashboard/Admin/ManageServices'
 import ServicesPage from '../pages/Services/ServicesPage'
+import ServiceDetailsPage from '../pages/Services/ServiceDetailsPage'
 
 export const router = createBrowserRouter([
   {
@@ -32,8 +32,8 @@ export const router = createBrowserRouter([
 
       },
       {
-        path: '/plant/:id',
-        element: <PlantDetails />,
+        path: '/services/:id',
+        element: <ServiceDetailsPage></ServiceDetailsPage>,
       },
     ],
   },
