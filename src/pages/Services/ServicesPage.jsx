@@ -54,7 +54,7 @@ const ServicesPage = () => {
     };
 
     const { data, isLoading } = useQuery({
-        queryKey: ["services-advanced", filters],
+        queryKey: ["services-page", filters],
         queryFn: async () => {
             const res = await axios.get(
                 `${import.meta.env.VITE_API_URL}/services-filter`,
@@ -69,7 +69,7 @@ const ServicesPage = () => {
 
     return (
         <Container>
-            <div className="pt-24 pb-20">
+            <div className="pt-18 pb-20">
 
                 {/* PAGE TITLE */}
                 <div className="text-center mb-12">
@@ -187,7 +187,7 @@ const ServicesPage = () => {
                         ))}
                     </div>
                 )}
-                
+
                 {/* NO SERVICES FOUND */}
                 {!isLoading && services.length === 0 && (
                     <div className="py-24 text-center">

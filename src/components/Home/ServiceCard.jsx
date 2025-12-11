@@ -1,45 +1,61 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router";
 
-const ServiceCard = ({ service}) => {
+const ServiceCard = ({ service }) => {
   return (
     <motion.div
-      whileHover={{ scale: 1.03 }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
       className="
-        bg-white rounded-2xl overflow-hidden shadow-lg 
-        border border-base-300 hover:shadow-2xl 
+        bg-white rounded-xl overflow-hidden
+        border border-gray-200 shadow-md hover:shadow-xl 
         transition-all duration-300
+        flex flex-col
+        h-[380px]    /* FIXED HEIGHT HERE */
       "
     >
-      <div className="h-48 w-full overflow-hidden">
+      <div className="h-44 w-full overflow-hidden">
         <motion.img
           src={service.image}
           alt={service.service_name}
           className="object-cover w-full h-full"
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.4 }}
+          whileHover={{ scale: 1.06 }}
+          transition={{ duration: 0.35 }}
         />
       </div>
 
-      <div className="p-5">
-        <h3 className="text-xl font-semibold">{service.service_name}</h3>
-        <p className="text-gray-500 capitalize">{service.category}</p>
+      {/* CONTENT AREA */}
+      <div className="p-4 flex flex-col flex-1 justify-between">
 
-        <p className="text-primary font-bold mt-2">
-          {service.cost} BDT{" "}
-          <span className="text-gray-500 text-sm">({service.unit})</span>
-        </p>
+        {/* TOP CONTENT */}
+        <div className="space-y-1.5 overflow-hidden">
+          <h3 className="text-[17px] font-semibold text-gray-800 leading-snug line-clamp-2">
+            {service.service_name}
+          </h3>
 
+          <p className="text-gray-500 capitalize text-sm">
+            {service.category}
+          </p>
+
+          <p className="text-primary font-bold text-[17px] pt-1">
+            {service.cost} BDT
+            <span className="text-gray-500 font-normal text-sm"> / {service.unit}</span>
+          </p>
+        </div>
+
+        {/* BUTTON ALWAYS AT BOTTOM */}
         <Link
           to={`/services/${service._id}`}
           className="
-            block mt-4 w-full py-2 text-center bg-primary text-white 
-            rounded-lg hover:bg-secondary transition
+            block w-full mt-4 py-2.5 text-center 
+            bg-primary text-white rounded-lg 
+            hover:bg-secondary transition-all duration-200
+            text-sm font-medium tracking-wide
           "
         >
           View Details
         </Link>
+
       </div>
     </motion.div>
   );
