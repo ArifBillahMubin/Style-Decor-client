@@ -7,7 +7,7 @@ import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 
 const ManageServices = () => {
     // Demo services (will replace with API later)
-    const { data: services = [], isLoading } = useQuery({
+    const { data: services = [], isLoading, refetch } = useQuery({
         queryKey: ['all services'],
         queryFn: async () => {
             const result = await axios(`${import.meta.env.VITE_API_URL}/services`);
@@ -30,7 +30,7 @@ const ManageServices = () => {
 
             {/* ADD SERVICE FORM */}
             <div className="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300 mb-10">
-                <AddServices />
+                <AddServices refetch={refetch}/>
             </div>
 
             {/* TABLE SECTION */}
@@ -56,7 +56,7 @@ const ManageServices = () => {
                     {/* TABLE BODY (Calling your component row-by-row) */}
                     <tbody>
                         {services.map((service) => (
-                            <ServiceDataRow key={service._id} service={service} />
+                            <ServiceDataRow key={service._id} service={service} refetch={refetch}/>
                         ))}
                     </tbody>
 

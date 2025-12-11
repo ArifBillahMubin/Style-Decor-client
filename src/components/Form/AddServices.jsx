@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { imageUpload } from "../../../utils";
 import useAuth from "../../hooks/useAuth";
 
-const AddServices = () => {
+const AddServices = ({ refetch }) => {
   const { user } = useAuth();
 
   // TanStack Mutation for adding service
@@ -16,6 +16,7 @@ const AddServices = () => {
 
     onSuccess: () => {
       toast.success("Service added successfully!");
+      if (refetch) refetch();
     },
 
     onError: (error) => {
@@ -190,10 +191,16 @@ const AddServices = () => {
             <button
               type="submit"
               disabled={isPending}
-              className="w-full p-3 text-center font-medium text-white rounded-md 
-              bg-primary hover:bg-secondary transition shadow-md"
+              className="w-full flex justify-center items-center gap-2 p-3 font-medium text-white rounded-md bg-primary hover:bg-secondary transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {isPending ? "Saving..." : "Save Service"}
+              {isPending ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Saving...
+                </>
+              ) : (
+                "Save Service"
+              )}
             </button>
           </div>
 

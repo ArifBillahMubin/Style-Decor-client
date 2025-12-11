@@ -3,9 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const DeleteServiceModal = ({ isOpen, closeModal, id }) => {
+const DeleteServiceModal = ({ isOpen, closeModal, id, refetch}) => {
   const deleteService = async () => {
-    console.log("Deleting service with id:", id);
     return await axios.delete(`${import.meta.env.VITE_API_URL}/services/${id}`);
   };
 
@@ -14,6 +13,7 @@ const DeleteServiceModal = ({ isOpen, closeModal, id }) => {
     onSuccess: () => {
       toast.success("Service deleted");
       closeModal();
+      if (refetch) refetch();
     },
     onError: () => {
       toast.error("Failed to delete");

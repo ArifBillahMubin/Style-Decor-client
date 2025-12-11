@@ -2,7 +2,7 @@ import { useState } from "react";
 import UpdateServiceModal from "../../Modal/UpdateServiceModal";
 import DeleteServiceModal from "../../Modal/DeleteServiceModal";
 
-const ServiceDataRow = ({ service }) => {
+const ServiceDataRow = ({ service ,refetch}) => {
   const [isDeleteOpen, setDeleteOpen] = useState(false);
   const [isEditOpen, setEditOpen] = useState(false);
 
@@ -53,6 +53,7 @@ const ServiceDataRow = ({ service }) => {
           isOpen={isDeleteOpen}
           closeModal={() => setDeleteOpen(false)}
           id={service._id}
+          refetch={refetch}
         />
       </td>
 
