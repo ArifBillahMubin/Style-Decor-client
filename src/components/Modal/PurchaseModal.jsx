@@ -1,3 +1,4 @@
+// this is for bokking in service details page modal is customer is book button click then data will save in database and bokking infote r ekts save hove initialy is payment = false and check out session i will create letter another dasbord page letter 
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -15,16 +16,16 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
     rating
   } = service || {};
 
-  // React Hook Form Setup
+  // React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
 
-
+  // HANDLE BOOKING 
   const onSubmit = (formData) => {
-    const paymentInfo = {
+    const bookingInfo = {
       serviceId: _id,
       serviceName: service_name,
       category,
@@ -37,27 +38,25 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
       bookingDate: formData.bookingDate,
       location: formData.location,
 
+      payment: false, 
+      bookingStatus: "pending", 
+
       customer: {
         name: user?.displayName,
         email: user?.email,
       },
+
+      createdAt: new Date(),
     };
 
     axios
-      .post(`${import.meta.env.VITE_API_URL}/create-checkout-session`, paymentInfo)
-      .then((res) => {
-        const url = res?.data?.url;
-
-        if (!url) {
-          toast.error("Unable to start payment session.");
-          return;
-        }
-
-        toast.success("Redirecting to payment...");
-        window.location.href = url;
+      .post(`${import.meta.env.VITE_API_URL}/bookings`, bookingInfo)
+      .then(() => {
+        toast.success("Booking saved successfully!");
+        closeModal();
       })
       .catch(() => {
-        toast.error("Payment request failed. Try again.");
+        toast.error("Booking failed. Try again.");
       });
   };
 
@@ -77,7 +76,7 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
             transition-all duration-300
           "
         >
-          {/* MODAL TITLE */}
+          {/* TITLE */}
           <DialogTitle className="text-xl font-semibold text-center text-gray-900 mb-4">
             Confirm Your Booking
           </DialogTitle>
@@ -87,14 +86,15 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
             <p><span className="font-medium">Service:</span> {service_name}</p>
             <p><span className="font-medium">Category:</span> {category}</p>
             <p>
-              <span className="font-medium">Price:</span> {cost} BDT / {unit}
+              <span className="font-medium">Price:</span>
+              {" "}{cost} BDT / {unit}
             </p>
           </div>
 
           {/* BOOKING FORM */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
-            {/* USER NAME */}
+            {/* NAME */}
             <div>
               <label className="text-sm text-gray-600">Your Name</label>
               <input
@@ -105,7 +105,7 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
               />
             </div>
 
-            {/* USER EMAIL */}
+            {/* EMAIL */}
             <div>
               <label className="text-sm text-gray-600">Your Email</label>
               <input
@@ -121,25 +121,33 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
               <label className="text-sm text-gray-600">Booking Date *</label>
               <input
                 type="date"
-                {...register("bookingDate", { required: "Booking date is required" })}
+                {...register("bookingDate", {
+                  required: "Booking date is required",
+                })}
                 className="w-full px-4 py-2 mt-1 border rounded-lg bg-white"
               />
               {errors.bookingDate && (
-                <p className="text-red-500 text-sm mt-1">{errors.bookingDate.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.bookingDate.message}
+                </p>
               )}
             </div>
 
-            {/* EVENT LOCATION */}
+            {/* LOCATION */}
             <div>
               <label className="text-sm text-gray-600">Event Location *</label>
               <input
                 type="text"
                 placeholder="Enter location"
-                {...register("location", { required: "Event location is required" })}
+                {...register("location", {
+                  required: "Event location is required",
+                })}
                 className="w-full px-4 py-2 mt-1 border rounded-lg bg-white"
               />
               {errors.location && (
-                <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.location.message}
+                </p>
               )}
             </div>
 
@@ -160,7 +168,6 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
                 Cancel
               </button>
             </div>
-
           </form>
         </DialogPanel>
       </div>
@@ -169,3 +176,4 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
 };
 
 export default PurchaseModal;
+
