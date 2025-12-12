@@ -11,6 +11,7 @@ const AdminMenu = () => {
         address='manage-services'
       />
       <MenuItem icon={FaUserCog} label='Manage Decorators' address='manage-Decorators' />
+      <MenuItem icon={FaUserCog} label='Manage Bookings' address='manage-Bookings' />
     </>
   )
 }

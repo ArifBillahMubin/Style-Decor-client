@@ -37,7 +37,7 @@ const Login = () => {
       const { user } = await signIn(email, password);
 
       //save user to db
-      await saveOrUpdateUser({name: user?.displayName, email: user?.email, imageUrl: user?.photoURL})
+      await saveOrUpdateUser({name: user?.displayName, email: user?.email, imageURL: user?.photoURL})
 
       navigate(from, { replace: true });
       toast.success("Login Successful");
@@ -54,7 +54,7 @@ const Login = () => {
       const { user } =await signInWithGoogle();
 
       //save user to db
-      await saveOrUpdateUser({name: user?.displayName, email: user?.email, imageUrl: user?.photoURL})
+      await saveOrUpdateUser({name: user?.displayName, email: user?.email, imageURL: user?.photoURL})
 
       navigate(from, { replace: true });
       toast.success("Login Successful");

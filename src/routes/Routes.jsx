@@ -18,6 +18,7 @@ import PaymentSuccess from '../pages/Payment/PaymentSuccess'
 import MyBookings from '../pages/Dashboard/Customer/MyBookings'
 import PaymentHistoryPage from '../pages/Dashboard/Customer/PaymentHistoryPage'
 import ManageDecorators from '../pages/Dashboard/Admin/ManageDecorators'
+import ManageBookings from '../pages/Dashboard/Admin/ManageBookings'
 
 export const router = createBrowserRouter([
   {
@@ -79,10 +80,18 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'manage-Decorators',//admin updated working conver manage services
+        path: 'manage-Decorators',//admin 
         element: (
           <PrivateRoute>
             <ManageDecorators></ManageDecorators>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'manage-Bookings',//admin 
+        element: (
+          <PrivateRoute>
+            <ManageBookings></ManageBookings>
           </PrivateRoute>
         ),
       },

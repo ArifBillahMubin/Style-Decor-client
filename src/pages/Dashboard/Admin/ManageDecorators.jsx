@@ -1,33 +1,64 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Pagination from "../../../Pagination/Pagination";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
-import UserDataRow from "../../../components/Dashboard/TableRows/UserDataRow";
+import { useState } from "react";
+import DecoratorDataRow from "../../../components/Dashboard/TableRows/DecoratorDataRow";
+import CustomerDataRow from "../../../components/Dashboard/TableRows/CustomerDataRow";
+
+
+const ITEMS_PER_PAGE = 5; // You can change this
 
 const ManageDecorators = () => {
-  const { data: users = [], isLoading, refetch } = useQuery({
-    queryKey: ["all-users"],
-    queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/users`);
-      return res.data;
-    },
-  });
+  // Pagination State
+  const [customerPage, setCustomerPage] = useState(1);
+  const [decoratorPage, setDecoratorPage] = useState(1);
 
-  if (isLoading) return <LoadingSpinner />;
+  // GET customers 
+  const { data: customers = [], isLoading: loadingCustomers, refetch: refetchCustomers } =
+    useQuery({
+      queryKey: ["customers"],
+      queryFn: async () => {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/customer`);
+        return res.data;
+      },
+    });
+
+  // GET decorators
+  const { data: decorators = [], isLoading: loadingDecorators, refetch: refetchDecorators } =
+    useQuery({
+      queryKey: ["decorators"],
+      queryFn: async () => {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/decorator`);
+        return res.data;
+      },
+    });
+
+  if (loadingCustomers || loadingDecorators) return <LoadingSpinner />;
+
+  // PAGINATION SLICING
+  const customerStart = (customerPage - 1) * ITEMS_PER_PAGE;
+  const customerPageData = customers.slice(customerStart, customerStart + ITEMS_PER_PAGE);
+  const customerTotalPages = Math.ceil(customers.length / ITEMS_PER_PAGE);
+
+  const decoratorStart = (decoratorPage - 1) * ITEMS_PER_PAGE;
+  const decoratorPageData = decorators.slice(decoratorStart, decoratorStart + ITEMS_PER_PAGE);
+  const decoratorTotalPages = Math.ceil(decorators.length / ITEMS_PER_PAGE);
 
   return (
     <div className="w-full h-full">
 
-      {/* PAGE HEADER */}
+      {/* HEADER */}
       <div className="mb-8 bg-base-100 p-6 rounded-xl shadow-sm border border-base-300">
-        <h1 className="text-3xl font-bold text-secondary">Manage User Roles</h1>
+        <h1 className="text-3xl font-bold text-secondary">Manage Decorators</h1>
         <p className="text-gray-500 mt-1">
-          Assign and update user roles: Customer, Decorator, Admin
+          Promote customers to decorators and manage existing decorators.
         </p>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300 overflow-x-auto">
-        <h2 className="text-2xl font-bold text-secondary mb-5">All Users</h2>
+      {/* DECORATORS TABLE */}
+      <div className="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300 mb-10 overflow-x-auto">
+        <h2 className="text-2xl font-bold text-secondary mb-5">All Decorators</h2>
 
         <table className="table w-full">
           <thead>
@@ -42,12 +73,61 @@ const ManageDecorators = () => {
           </thead>
 
           <tbody>
-            {users.map((user) => (
-              <UserDataRow key={user._id} user={user} refetch={refetch} />
+            {decoratorPageData.map((user) => (
+              <DecoratorDataRow
+                key={user._id}
+                user={user}
+                refetchCustomers={refetchCustomers}
+                refetchDecorators={refetchDecorators}
+              />
             ))}
           </tbody>
         </table>
+
+        {/* DECORATOR PAGINATION */}
+        <Pagination
+          currentPage={decoratorPage}
+          totalPages={decoratorTotalPages}
+          setPage={setDecoratorPage}
+        />
       </div>
+
+      {/* CUSTOMERS TABLE */}
+      <div className="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300 overflow-x-auto">
+        <h2 className="text-2xl font-bold text-secondary mb-5">All Customers</h2>
+
+        <table className="table w-full">
+          <thead>
+            <tr className="text-secondary text-sm border-b border-base-300">
+              <th>Image</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Last Login</th>
+              <th className="text-center">Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {customerPageData.map((user) => (
+              <CustomerDataRow
+                key={user._id}
+                user={user}
+                refetchCustomers={refetchCustomers}
+                refetchDecorators={refetchDecorators}
+              />
+            ))}
+          </tbody>
+        </table>
+
+        {/* CUSTOMER PAGINATION */}
+        <Pagination
+          currentPage={customerPage}
+          totalPages={customerTotalPages}
+          setPage={setCustomerPage}
+        />
+      </div>
+
     </div>
   );
 };
