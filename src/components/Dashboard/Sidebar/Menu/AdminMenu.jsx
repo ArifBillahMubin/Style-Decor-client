@@ -10,7 +10,7 @@ const AdminMenu = () => {
         label='Manage Services & Packages'
         address='manage-services'
       />
-      <MenuItem icon={FaUserCog} label='Manage Users' address='manage-users' />
+      <MenuItem icon={FaUserCog} label='Manage Decorators' address='manage-Decorators' />
     </>
   )
 }

@@ -4,7 +4,7 @@ import Login from '../pages/Login/Login'
 import SignUp from '../pages/SignUp/SignUp'
 import PrivateRoute from './PrivateRoute'
 import DashboardLayout from '../layouts/DashboardLayout'
-import ManageUsers from '../pages/Dashboard/Admin/ManageUsers'
+import ManageUsers from '../pages/Dashboard/Admin/ManageDecorators'
 import Profile from '../pages/Dashboard/Common/Profile'
 import Statistics from '../pages/Dashboard/Common/Statistics'
 import MainLayout from '../layouts/MainLayout'
@@ -17,6 +17,7 @@ import ServiceDetailsPage from '../pages/Services/ServiceDetailsPage'
 import PaymentSuccess from '../pages/Payment/PaymentSuccess'
 import MyBookings from '../pages/Dashboard/Customer/MyBookings'
 import PaymentHistoryPage from '../pages/Dashboard/Customer/PaymentHistoryPage'
+import ManageDecorators from '../pages/Dashboard/Admin/ManageDecorators'
 
 export const router = createBrowserRouter([
   {
@@ -62,7 +63,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'manage-services',
+        path: 'manage-services',//admin
         element: (
           <PrivateRoute>
             <ManageServices></ManageServices>
@@ -78,10 +79,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'manage-users',
+        path: 'manage-Decorators',//admin updated working conver manage services
         element: (
           <PrivateRoute>
-            <ManageUsers />
+            <ManageDecorators></ManageDecorators>
           </PrivateRoute>
         ),
       },
@@ -102,7 +103,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path:'payment-history',
+        path:'payment-history', //customer
         element:<PaymentHistoryPage></PaymentHistoryPage>
       },
       {
