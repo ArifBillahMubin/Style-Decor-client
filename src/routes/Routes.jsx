@@ -10,12 +10,12 @@ import Statistics from '../pages/Dashboard/Common/Statistics'
 import MainLayout from '../layouts/MainLayout'
 import MyInventory from '../pages/Dashboard/Seller/MyInventory'
 import ManageOrders from '../pages/Dashboard/Seller/ManageOrders'
-import MyOrders from '../pages/Dashboard/Customer/MyOrders'
 import { createBrowserRouter } from 'react-router'
 import ManageServices from '../pages/Dashboard/Admin/ManageServices'
 import ServicesPage from '../pages/Services/ServicesPage'
 import ServiceDetailsPage from '../pages/Services/ServiceDetailsPage'
 import PaymentSuccess from '../pages/Payment/PaymentSuccess'
+import MyBookings from '../pages/Dashboard/Customer/MyBookings'
 
 export const router = createBrowserRouter([
   {
@@ -93,10 +93,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'my-orders',
+        path: 'my-Bookings',
         element: (
           <PrivateRoute>
-            <MyOrders />
+            <MyBookings></MyBookings>
           </PrivateRoute>
         ),
       },
