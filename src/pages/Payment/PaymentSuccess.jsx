@@ -50,7 +50,7 @@ const PaymentSuccess = () => {
 
                     {/* BUTTON */}
                     <Link
-                        to="/dashboard/my-orders"
+                        to="/dashboard/my-bookings"
                         className="inline-flex items-center justify-center px-8 py-3 rounded-xl text-white bg-primary hover:bg-secondary transition-all text-lg font-medium shadow-md">
                         View My Bookings
                     </Link>

@@ -15,16 +15,16 @@ const CustomerbookingsDataRow = ({ booking, refetch }) => {
 
   console.log(booking);
 
-  // CANCEL BOOKING
   const handleCancel = () => {
     axios
-      .patch(`${import.meta.env.VITE_API_URL}/bookings/cancel/${_id}`)
+      .delete(`${import.meta.env.VITE_API_URL}/bookings/cancel/${_id}`)
       .then(() => {
-        toast.success("Booking cancelled");
+        toast.success("Booking cancelled & removed");
         refetch();
       })
       .catch(() => toast.error("Failed to cancel booking"));
   };
+
 
   // PAYMENT
   const handlePayment = () => {

@@ -13,6 +13,7 @@ const CustomerMenu = () => {
   return (
     <>
       <MenuItem icon={BsFingerprint} label='My Bookings' address='my-bookings' />
+      <MenuItem icon={BsFingerprint} label='Payment History' address='payment-history' />
 
       <div
         onClick={() => setIsOpen(true)}
