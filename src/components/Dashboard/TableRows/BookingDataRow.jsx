@@ -1,6 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
+import { useState } from "react";
+import AssignDecoratorModal from "../../Modal/AssignDecoratorModal";
 
 const BookingDataRow = ({ booking, refetch }) => {
     const {
@@ -12,21 +13,29 @@ const BookingDataRow = ({ booking, refetch }) => {
         customer,
         payment,
         bookingStatus,
-        assignedDecorator
+        assignedDecorator,
     } = booking;
 
+    const [isOpen, setIsOpen] = useState(false);
+
+    // STATUS FLAGS
+    const isPending = bookingStatus === "pending";
+    const isAssigned = bookingStatus === "assigned";
+    const isCancelled = bookingStatus === "cancelled";
+
+    // CANCEL BOOKING
     const handleCancel = () => {
         Swal.fire({
             title: "Cancel booking?",
             text: "This action cannot be undone.",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#6366F1",
-            confirmButtonText: "Cancel Booking"
+            confirmButtonColor: "#EF4444",
+            confirmButtonText: "Cancel Booking",
         }).then((res) => {
             if (res.isConfirmed) {
-                axios.patch(`${import.meta.env.VITE_API_URL}/admin/bookings/cancel/${_id}`)
+                axios
+                    .delete(`${import.meta.env.VITE_API_URL}/bookings/cancel/${_id}`)
                     .then(() => {
                         Swal.fire("Cancelled", "Booking has been cancelled", "success");
                         refetch();
@@ -35,111 +44,126 @@ const BookingDataRow = ({ booking, refetch }) => {
         });
     };
 
-    const handleAssignDecorator = () => {
-        axios.get(`${import.meta.env.VITE_API_URL}/decorators`).then((res) => {
-            const decorators = res.data;
-
-            const options = decorators
-                .map(
-                    (d) =>
-                        `<option value="${d.email}">${d.name} (${d.email})</option>`
-                )
-                .join("");
-
-            Swal.fire({
-                title: "Assign Decorator",
-                html: `
-          <select id="decoratorSelect" class="swal2-input">${options}</select>
-        `,
-                confirmButtonText: "Assign",
-                showCancelButton: true,
-                confirmButtonColor: "#6366F1"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const decoratorEmail = document.getElementById("decoratorSelect").value;
-                    const decoratorInfo = decorators.find(d => d.email === decoratorEmail);
-
-                    axios.patch(`${import.meta.env.VITE_API_URL}/admin/bookings/assign/${_id}`, {
-                        decoratorEmail,
-                        decoratorName: decoratorInfo.name,
-                    })
-                        .then(() => {
-                            Swal.fire("Success", "Decorator assigned", "success");
-                            refetch();
-                        });
-                }
-            });
-        });
-    };
-
     return (
-        <tr className="hover:bg-base-200 transition">
+        <>
+            <tr className="hover:bg-base-200 transition text-gray-700">
 
-            <td><img src={image} className="w-20 h-14 rounded-lg object-cover" /></td>
+                {/* IMAGE */}
+                <td>
+                    <img
+                        src={image}
+                        alt={serviceName}
+                        className="w-20 h-14 rounded-lg object-cover shadow"
+                    />
+                </td>
 
-            <td className="font-medium">{serviceName}</td>
+                {/* SERVICE */}
+                <td className="font-medium">{serviceName}</td>
 
-            <td>{customer?.email}</td>
+                {/* USER */}
+                <td className="text-sm">{customer?.email}</td>
 
-            <td>{bookingDate}</td>
+                {/* DATE */}
+                <td className="text-sm">{bookingDate}</td>
 
-            <td className="text-primary font-semibold">{cost} BDT</td>
+                {/* PRICE */}
+                <td className="text-primary font-semibold">{cost} BDT</td>
 
-            <td>
-                <span className={`
-          px-3 py-1 rounded-full text-xs font-medium
-          ${payment ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}
-        `}>
-                    {payment ? "Paid" : "Unpaid"}
-                </span>
-            </td>
-
-            <td>
-                <span className={`
-          px-3 py-1 rounded-full text-xs font-medium
-          ${bookingStatus === "pending"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : bookingStatus === "cancelled"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-green-100 text-green-700"}
-        `}>
-                    {bookingStatus}
-                </span>
-            </td>
-
-            <td>
-                {assignedDecorator?.name ? (
-                    <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">
-                        {assignedDecorator.name}
+                {/* PAYMENT */}
+                <td>
+                    <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold
+              ${payment
+                                ? "bg-success/15 text-success"
+                                : "bg-error/15 text-error"
+                            }
+            `}
+                    >
+                        {payment ? "Paid" : "Unpaid"}
                     </span>
-                ) : (
-                    <span className="text-gray-400 text-xs">Not Assigned</span>
-                )}
-            </td>
+                </td>
 
-            <td className="text-center">
-                <div className="flex items-center justify-center gap-2">
+                {/* STATUS (SINGLE LINE ONLY) */}
+                <td>
+                    <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold capitalize
+              ${isPending
+                                ? "bg-warning/15 text-warning"
+                                : isAssigned
+                                    ? "bg-info/15 text-info"
+                                    : "bg-error/15 text-error"
+                            }
+            `}
+                    >
+                        {bookingStatus}
+                    </span>
+                </td>
 
-                    {/* Assign Button */}
-                    {payment && (
+                {/* DECORATOR */}
+                <td className="max-w-[180px]">
+                    {assignedDecorator?.name ? (
+                        <span
+                            className="inline-block px-3 py-1 rounded-lg bg-info/10 text-info text-xs font-medium truncate"
+                            title={assignedDecorator.name}
+                        >
+                            {assignedDecorator.name}
+                        </span>
+                    ) : (
+                        <span className="text-xs text-base-content/50">
+                            Not Assigned
+                        </span>
+                    )}
+                </td>
+
+                {/* ACTIONS */}
+                <td className="text-center min-w-[160px]">
+
+                    {/* PENDING + PAID → ASSIGN */}
+                    {payment && isPending && (
                         <button
-                            onClick={handleAssignDecorator}
-                            className="px-4 py-1 bg-primary text-white rounded-lg hover:bg-secondary transition"
+                            onClick={() => setIsOpen(true)}
+                            className="px-4 py-1 bg-primary text-white rounded-lg hover:bg-primary-focus transition"
                         >
                             Assign
                         </button>
                     )}
 
-                    {/* Cancel Button */}
-                    <button
-                        onClick={handleCancel}
-                        className="px-4 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </td>
-        </tr>
+                    {/* ASSIGNED → CHANGE DECORATOR */}
+                    {payment && isAssigned && (
+                        <button
+                            onClick={() => setIsOpen(true)}
+                            className="px-4 py-1 bg-info text-white rounded-lg hover:bg-info-focus transition"
+                        >
+                            Change
+                        </button>
+                    )}
+
+                    {/* PENDING + UNPAID → CANCEL */}
+                    {!payment && isPending && (
+                        <button
+                            onClick={handleCancel}
+                            className="px-4 py-1 bg-error text-white rounded-lg hover:bg-error-focus transition"
+                        >
+                            Cancel
+                        </button>
+                    )}
+
+                    {/* NO ACTION */}
+                    {!isPending && !isAssigned && (
+                        <span className="text-xs text-base-content/50">—</span>
+                    )}
+
+                </td>
+            </tr>
+
+            {/* ASSIGN / CHANGE MODAL */}
+            <AssignDecoratorModal
+                isOpen={isOpen}
+                closeModal={() => setIsOpen(false)}
+                bookingId={_id}
+                refetch={refetch}
+            />
+        </>
     );
 };
 
