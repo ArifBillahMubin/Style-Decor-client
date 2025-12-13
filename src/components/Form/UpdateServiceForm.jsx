@@ -4,9 +4,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { imageUpload } from "../../../utils";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const UpdateServiceForm = ({ service, closeModal, refetch }) => {
+  const axiosSecure =useAxiosSecure();
+
   const {
     register,
     handleSubmit,
@@ -41,8 +44,8 @@ const UpdateServiceForm = ({ service, closeModal, refetch }) => {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (payload) => {
       const id = service?._id;
-      const res = await axios.put(
-        `${import.meta.env.VITE_API_URL}/services/${id}`,
+      const res = await axiosSecure.put(
+        `/services/${id}`,
         payload
       );
       return res.data;

@@ -1,21 +1,23 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const AssignDecoratorModal = ({ isOpen, closeModal, bookingId, refetch }) => {
+    const axiosSecure = useAxiosSecure()
 
     const { data: decorators = [] } = useQuery({
         queryKey: ["assign-decorators"],
         queryFn: async () => {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/decorator`);
+            const res = await axiosSecure.get(`/users/decorator`);
             return res.data;
         },
         enabled: isOpen,
     });
 
     const handleAssign = (decorator) => {
-        axios
-            .patch(`${import.meta.env.VITE_API_URL}/admin/bookings/assign/${bookingId}`, {
+        axiosSecure
+            .patch(`/admin/bookings/assign/${bookingId}`, {
                 decoratorName: decorator.name,
                 decoratorEmail: decorator.email,
             })

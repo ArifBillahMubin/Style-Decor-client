@@ -1,18 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import { imageUpload } from "../../../utils";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const AddServices = ({ refetch }) => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure()
 
   // TanStack Mutation for adding service
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (payload) =>
-      await axios.post(`${import.meta.env.VITE_API_URL}/service`, payload),
+      await axiosSecure.post(`/service`, payload),
 
     onSuccess: () => {
       toast.success("Service added successfully!");

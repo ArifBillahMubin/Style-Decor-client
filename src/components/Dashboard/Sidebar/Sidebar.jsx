@@ -14,15 +14,20 @@ import MenuItem from "./Menu/MenuItem";
 import AdminMenu from "./Menu/AdminMenu";
 import CustomerMenu from "./Menu/CustomerMenu";
 import DecoratorMenu from "./Menu/DecoratorMenu";
+import useRole from "../../../hooks/useRole";
+import LoadingSpinner from "../../Shared/LoadingSpinner";
 
 const Sidebar = () => {
   const { logOut } = useAuth();
   const [isActive, setActive] = useState(false);
+  const { role, iseRoleLoading } = useRole();
 
   // Sidebar Responsive Handler
   const handleToggle = () => {
     setActive(!isActive);
   };
+
+  if(iseRoleLoading) <LoadingSpinner></LoadingSpinner>
 
   return (
     <>
@@ -71,9 +76,9 @@ const Sidebar = () => {
               />
 
               {/* Role-based Menus */}
-              <CustomerMenu />
-              <DecoratorMenu></DecoratorMenu>
-              <AdminMenu />
+              {role === 'customer' && <CustomerMenu />}
+              {role === 'decorator' && <DecoratorMenu></DecoratorMenu>}
+              {role === 'admin' && <AdminMenu />}
             </nav>
           </div>
 

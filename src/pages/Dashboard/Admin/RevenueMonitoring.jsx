@@ -13,6 +13,7 @@ import {
     Cell,
 } from "recharts";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 /*  STATUS COLORS  */
 const STATUS_CONFIG = {
@@ -57,12 +58,13 @@ const CustomXAxisTick = ({ x, y, payload }) => {
 };
 
 const RevenueMonitoring = () => {
+    const axiosSecure = useAxiosSecure();
     /*  SUMMARY  */
     const { data: summary = {}, isLoading: loadingSummary } = useQuery({
         queryKey: ["admin-summary"],
         queryFn: async () => {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/admin/analytics/summary`
+            const res = await axiosSecure.get(
+                `/admin/analytics/summary`
             );
             return res.data;
         },
@@ -72,8 +74,8 @@ const RevenueMonitoring = () => {
     const { data: demand = [], isLoading: loadingDemand } = useQuery({
         queryKey: ["service-demand"],
         queryFn: async () => {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/admin/analytics/service-demand`
+            const res = await axiosSecure.get(
+                `/admin/analytics/service-demand`
             );
             return res.data;
         },
@@ -83,8 +85,8 @@ const RevenueMonitoring = () => {
     const { data: statusData = [], isLoading: loadingStatus } = useQuery({
         queryKey: ["status-distribution"],
         queryFn: async () => {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/admin/analytics/status-distribution`
+            const res = await axiosSecure.get(
+                `/admin/analytics/status-distribution`
             );
             return res.data;
         },

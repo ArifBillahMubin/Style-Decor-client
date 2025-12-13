@@ -1,7 +1,10 @@
 import axios from "axios";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const DecoratorDataRow = ({ user, refetchCustomers, refetchDecorators }) => {
+    const axiosSecure = useAxiosSecure();
+
     const {
         userId,
         name,
@@ -23,8 +26,8 @@ const DecoratorDataRow = ({ user, refetchCustomers, refetchDecorators }) => {
             confirmButtonText: "Remove"
         }).then((result) => {
             if (result.isConfirmed) {
-                axios
-                    .patch(`${import.meta.env.VITE_API_URL}/users/demote/${userId}`)
+                axiosSecure
+                    .patch(`/users/demote/${userId}`)
                     .then(() => {
                         Swal.fire({
                             icon: "success",

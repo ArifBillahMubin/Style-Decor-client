@@ -3,15 +3,17 @@ import axios from "axios";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import CustomerbookingsDataRow from "../../../components/Dashboard/TableRows/CustomerbookingsDataRow";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyBookings = () => {
   const { user } = useAuth();
+  const axiosSecure =useAxiosSecure();
 
   const { data: bookings = [], isLoading, refetch } = useQuery({
     queryKey: ["my-bookings", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/bookings/${user?.email}`
+      const res = await axiosSecure.get(
+        `/bookings`
       );
       return res.data;
     },

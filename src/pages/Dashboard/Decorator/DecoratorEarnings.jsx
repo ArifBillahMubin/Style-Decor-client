@@ -1,17 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const DecoratorEarnings = () => {
+    const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 
     const { data, isLoading } = useQuery({
         queryKey: ["decorator-earnings", user?.email],
         enabled: !!user?.email,
         queryFn: async () => {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/decorator/earnings?email=${user.email}`
+            const res = await axiosSecure.get(
+                `/decorator/earnings`
             );
             return res.data;
         }

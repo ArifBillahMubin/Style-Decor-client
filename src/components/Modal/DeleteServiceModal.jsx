@@ -2,10 +2,12 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const DeleteServiceModal = ({ isOpen, closeModal, id, refetch}) => {
+  const axiosSecure = useAxiosSecure();
   const deleteService = async () => {
-    return await axios.delete(`${import.meta.env.VITE_API_URL}/services/${id}`);
+    return await axiosSecure.delete(`/services/${id}`);
   };
 
   const mutation = useMutation({

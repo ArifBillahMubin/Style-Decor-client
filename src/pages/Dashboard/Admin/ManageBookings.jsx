@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import BookingDataRow from "../../../components/Dashboard/TableRows/BookingDataRow";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ManageBookings = () => {
+    const axiosSecure = useAxiosSecure();
     const { data: bookings = [], isLoading, refetch } = useQuery({
         queryKey: ["admin-bookings"],
         queryFn: async () => {
-            const res = await axios.get(`${import.meta.env.VITE_API_URL}/admin/bookings`);
+            const res = await axiosSecure.get(`/admin/bookings`);
             return res.data;
         },
     });

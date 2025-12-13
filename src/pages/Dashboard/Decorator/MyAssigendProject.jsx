@@ -3,16 +3,17 @@ import axios from "axios";
 import AssigendProjectDataRow from "../../../components/Dashboard/TableRows/AssigendProjectDataRow";
 import useAuth from "../../../hooks/useAuth";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const MyAssigendProject = () => {
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
 
   const { data: projects = [], isLoading, refetch } = useQuery({
     queryKey: ["assigned-projects", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/decorator/projects`,
-        { params: { email: user?.email } }
+      const res = await axiosSecure.get(
+        `/decorator/projects`
       );
       return res.data;
     },

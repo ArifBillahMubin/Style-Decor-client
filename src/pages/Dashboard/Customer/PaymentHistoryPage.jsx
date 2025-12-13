@@ -14,6 +14,7 @@ import { FiDollarSign, FiShoppingBag, FiLayers } from "react-icons/fi";
 import useAuth from "../../../hooks/useAuth";
 import Container from "../../../components/Shared/Container";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const CHART_COLORS = {
     home: "#6366F1",
@@ -26,13 +27,13 @@ const CHART_COLORS = {
 
 const PaymentHistoryPage = () => {
     const { user } = useAuth();
+    const axiosSecure =useAxiosSecure();
 
     const { data: payments = [], isLoading } = useQuery({
         queryKey: ["payment-history", user?.email],
         queryFn: async () => {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/payments/history`,
-                { params: { email: user?.email } }
+            const res = await axiosSecure.get(
+                `/payments/history`
             );
             return res.data;
         },

@@ -5,10 +5,12 @@ import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import { useState } from "react";
 import DecoratorDataRow from "../../../components/Dashboard/TableRows/DecoratorDataRow";
 import CustomerDataRow from "../../../components/Dashboard/TableRows/CustomerDataRow";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ITEMS_PER_PAGE = 5;
 
 const ManageDecorators = () => {
+  const axiosSecure = useAxiosSecure();
   const [customerPage, setCustomerPage] = useState(1);
   const [decoratorPage, setDecoratorPage] = useState(1);
 
@@ -20,14 +22,14 @@ const ManageDecorators = () => {
   } = useQuery({
     queryKey: ["customers"],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/users/customer`
+      const res = await axiosSecure.get(
+        `/users/customer`
       );
       return res.data;
     },
   });
 
-  // DECORATORS (with project counts)
+  // DECORATORS 
   const {
     data: decorators = [],
     isLoading: loadingDecorators,
@@ -35,8 +37,8 @@ const ManageDecorators = () => {
   } = useQuery({
     queryKey: ["decorators"],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/users/decorator`
+      const res = await axiosSecure.get(
+        `/users/decorator`
       );
       return res.data;
     },

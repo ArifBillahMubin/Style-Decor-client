@@ -4,16 +4,17 @@ import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import AssignedProjectsCalendar from "./AssignedProjectsCalendar";
 import TodayScheduleCard from "./TodayScheduleCard";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const TodaySchedule = () => {
+    const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
 
     const { data: bookings = [], isLoading } = useQuery({
         queryKey: ["decorator-bookings", user?.email],
         queryFn: async () => {
-            const res = await axios.get(
-                `${import.meta.env.VITE_API_URL}/decorator/bookings`,
-                { params: { email: user?.email } }
+            const res = await axiosSecure.get(
+                `/decorator/bookings`,
             );
             return res.data;
         },
@@ -36,7 +37,7 @@ const TodaySchedule = () => {
                     Today’s Schedule
                 </h1>
                 <p className="text-gray-500">
-                    Calendar view & today’s assigned projects
+                    Calendar view & today's assigned projects
                 </p>
             </div>
 

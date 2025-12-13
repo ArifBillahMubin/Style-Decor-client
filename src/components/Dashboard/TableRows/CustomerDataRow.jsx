@@ -1,8 +1,10 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const CustomerDataRow = ({ user, refetchCustomers, refetchDecorators }) => {
+    const axiosSecure = useAxiosSecure();
     const { _id, name, email, imageURL, role, last_login } = user;
 
     // Only customers are shown here, so button only converts customer → decorator
@@ -23,8 +25,8 @@ const CustomerDataRow = ({ user, refetchCustomers, refetchDecorators }) => {
     };
 
     const updateRole = () => {
-        axios
-            .patch(`${import.meta.env.VITE_API_URL}/users/promote/${_id}`)
+        axiosSecure
+            .patch(`/users/promote/${_id}`)
             .then(() => {
                 Swal.fire({
                     icon: "success",
