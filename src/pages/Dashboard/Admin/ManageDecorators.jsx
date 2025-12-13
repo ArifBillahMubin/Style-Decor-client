@@ -6,43 +6,57 @@ import { useState } from "react";
 import DecoratorDataRow from "../../../components/Dashboard/TableRows/DecoratorDataRow";
 import CustomerDataRow from "../../../components/Dashboard/TableRows/CustomerDataRow";
 
-
-const ITEMS_PER_PAGE = 5; // You can change this
+const ITEMS_PER_PAGE = 5;
 
 const ManageDecorators = () => {
-  // Pagination State
   const [customerPage, setCustomerPage] = useState(1);
   const [decoratorPage, setDecoratorPage] = useState(1);
 
-  // GET customers 
-  const { data: customers = [], isLoading: loadingCustomers, refetch: refetchCustomers } =
-    useQuery({
-      queryKey: ["customers"],
-      queryFn: async () => {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/customer`);
-        return res.data;
-      },
-    });
+  // CUSTOMERS
+  const {
+    data: customers = [],
+    isLoading: loadingCustomers,
+    refetch: refetchCustomers,
+  } = useQuery({
+    queryKey: ["customers"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/users/customer`
+      );
+      return res.data;
+    },
+  });
 
-  // GET decorators
-  const { data: decorators = [], isLoading: loadingDecorators, refetch: refetchDecorators } =
-    useQuery({
-      queryKey: ["decorators"],
-      queryFn: async () => {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/decorator`);
-        return res.data;
-      },
-    });
+  // DECORATORS (with project counts)
+  const {
+    data: decorators = [],
+    isLoading: loadingDecorators,
+    refetch: refetchDecorators,
+  } = useQuery({
+    queryKey: ["decorators"],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/users/decorator`
+      );
+      return res.data;
+    },
+  });
 
   if (loadingCustomers || loadingDecorators) return <LoadingSpinner />;
 
-  // PAGINATION SLICING
+  // PAGINATION
   const customerStart = (customerPage - 1) * ITEMS_PER_PAGE;
-  const customerPageData = customers.slice(customerStart, customerStart + ITEMS_PER_PAGE);
+  const customerPageData = customers.slice(
+    customerStart,
+    customerStart + ITEMS_PER_PAGE
+  );
   const customerTotalPages = Math.ceil(customers.length / ITEMS_PER_PAGE);
 
   const decoratorStart = (decoratorPage - 1) * ITEMS_PER_PAGE;
-  const decoratorPageData = decorators.slice(decoratorStart, decoratorStart + ITEMS_PER_PAGE);
+  const decoratorPageData = decorators.slice(
+    decoratorStart,
+    decoratorStart + ITEMS_PER_PAGE
+  );
   const decoratorTotalPages = Math.ceil(decorators.length / ITEMS_PER_PAGE);
 
   return (
@@ -50,15 +64,19 @@ const ManageDecorators = () => {
 
       {/* HEADER */}
       <div className="mb-8 bg-base-100 p-6 rounded-xl shadow-sm border border-base-300">
-        <h1 className="text-3xl font-bold text-secondary">Manage Decorators</h1>
+        <h1 className="text-3xl font-bold text-secondary">
+          Manage Decorators
+        </h1>
         <p className="text-gray-500 mt-1">
-          Promote customers to decorators and manage existing decorators.
+          Monitor decorator workload and manage availability.
         </p>
       </div>
 
       {/* DECORATORS TABLE */}
       <div className="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300 mb-10 overflow-x-auto">
-        <h2 className="text-2xl font-bold text-secondary mb-5">All Decorators</h2>
+        <h2 className="text-2xl font-bold text-secondary mb-5">
+          Active Decorators
+        </h2>
 
         <table className="table w-full">
           <thead>
@@ -66,8 +84,8 @@ const ManageDecorators = () => {
               <th>Image</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Role</th>
-              <th>Last Login</th>
+              <th className="text-center">Working Projects</th>
+              <th className="text-center">Completed Projects</th>
               <th className="text-center">Action</th>
             </tr>
           </thead>
@@ -84,7 +102,6 @@ const ManageDecorators = () => {
           </tbody>
         </table>
 
-        {/* DECORATOR PAGINATION */}
         <Pagination
           currentPage={decoratorPage}
           totalPages={decoratorTotalPages}
@@ -94,7 +111,9 @@ const ManageDecorators = () => {
 
       {/* CUSTOMERS TABLE */}
       <div className="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300 overflow-x-auto">
-        <h2 className="text-2xl font-bold text-secondary mb-5">All Customers</h2>
+        <h2 className="text-2xl font-bold text-secondary mb-5">
+          Customers
+        </h2>
 
         <table className="table w-full">
           <thead>
@@ -102,8 +121,6 @@ const ManageDecorators = () => {
               <th>Image</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Role</th>
-              <th>Last Login</th>
               <th className="text-center">Action</th>
             </tr>
           </thead>
@@ -120,14 +137,12 @@ const ManageDecorators = () => {
           </tbody>
         </table>
 
-        {/* CUSTOMER PAGINATION */}
         <Pagination
           currentPage={customerPage}
           totalPages={customerTotalPages}
           setPage={setCustomerPage}
         />
       </div>
-
     </div>
   );
 };
