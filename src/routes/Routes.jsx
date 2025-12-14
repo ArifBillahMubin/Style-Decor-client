@@ -22,6 +22,9 @@ import RevenueMonitoring from '../pages/Dashboard/Admin/RevenueMonitoring'
 import MyAssigendProject from '../pages/Dashboard/Decorator/MyAssigendProject'
 import TodaySchedule from '../pages/Dashboard/Decorator/TodaySchedule'
 import DecoratorEarnings from '../pages/Dashboard/Decorator/DecoratorEarnings'
+import CoverageMap from '../pages/CoverageMap/CoverageMap'
+import About from '../pages/About/About'
+import Contact from '../pages/Contact/Contact'
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +48,18 @@ export const router = createBrowserRouter([
       {
         path: '/payment-success',
         element: <PaymentSuccess></PaymentSuccess>
+      },
+      {
+        path:'/coverage',
+        element:<CoverageMap></CoverageMap>
+      },
+      {
+        path:'/about',
+        element:<About></About>
+      },
+      {
+        path:'/contact',
+        element:<Contact></Contact>
       }
     ],
   },
