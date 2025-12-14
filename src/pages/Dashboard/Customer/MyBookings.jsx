@@ -1,58 +1,88 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useState } from "react";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import CustomerbookingsDataRow from "../../../components/Dashboard/TableRows/CustomerbookingsDataRow";
-import useAuth from "../../../hooks/useAuth";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Pagination from "../../../Pagination/Pagination";
+
+const ITEMS_PER_PAGE = 5;
 
 const MyBookings = () => {
-  const { user } = useAuth();
-  const axiosSecure =useAxiosSecure();
+  const axiosSecure = useAxiosSecure();
 
-  const { data: bookings = [], isLoading, refetch } = useQuery({
-    queryKey: ["my-bookings", user?.email],
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["my-bookings", statusFilter, currentPage],
     queryFn: async () => {
       const res = await axiosSecure.get(
-        `/bookings`
+        `/bookings?status=${statusFilter}&page=${currentPage}&limit=${ITEMS_PER_PAGE}`
       );
       return res.data;
-    },
+    }
   });
 
   if (isLoading) return <LoadingSpinner />;
 
-  return (
-    <div className="w-full h-full">
+  const { bookings = [], totalPages = 1 } = data || {};
 
-      {/* PAGE HEADER */}
-      <div className="mb-8 bg-base-100 p-6 rounded-xl shadow-sm border border-base-300">
+  return (
+    <div className="w-full h-full space-y-8">
+
+      {/* HEADER */}
+      <div className="bg-base-100 p-6 rounded-xl shadow border border-base-300">
         <h1 className="text-3xl font-bold text-secondary">My Bookings</h1>
-        <p className="text-text-secondary mt-1">
-          Manage your booked decoration services.
+        <p className="text-gray-500 mt-1">
+          Track, manage, and pay for your bookings.
         </p>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-base-100 p-6 rounded-xl shadow-lg border border-base-300 overflow-x-auto">
-        <h2 className="text-2xl font-bold text-secondary mb-5">Bookings List</h2>
+      {/* FILTER */}
+      <div className="flex justify-end">
+        <select
+          value={statusFilter}
+          onChange={(e) => {
+            setStatusFilter(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="
+            px-4 py-2 rounded-xl border border-base-300
+            bg-base-100 text-secondary font-medium
+            shadow-sm focus:outline-none focus:ring-2 focus:ring-primary
+          "
+        >
+          <option value="all">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="assigned">Assigned</option>
+          <option value="planning_phase">Planning Phase</option>
+          <option value="materials_prepared">Materials Prepared</option>
+          <option value="ona_the_way">On The Way</option>
+          <option value="setup_in_progress">Setup In Progress</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
 
+      {/* TABLE */}
+      <div className="bg-base-100 p-6 rounded-xl shadow border border-base-300 overflow-x-auto">
         <table className="table w-full">
           <thead>
-            <tr className="text-secondary text-sm border-b border-base-300">
+            <tr className="text-secondary text-sm border-b">
               <th>Image</th>
               <th>Service</th>
               <th>Date</th>
               <th>Location</th>
               <th>Price</th>
               <th>Status</th>
-              <th>Actions</th> {/* All buttons in one column */}
+              <th>Action</th>
             </tr>
           </thead>
 
           <tbody>
             {bookings.length === 0 ? (
               <tr>
-                <td colSpan="7" className="text-center text-gray-500 py-10">
+                <td colSpan="7" className="text-center py-10 text-gray-400">
                   No bookings found
                 </td>
               </tr>
@@ -68,6 +98,13 @@ const MyBookings = () => {
           </tbody>
         </table>
       </div>
+
+      {/* PAGINATION */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setPage={setCurrentPage}
+      />
     </div>
   );
 };
