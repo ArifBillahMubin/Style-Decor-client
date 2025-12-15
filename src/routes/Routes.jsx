@@ -8,7 +8,6 @@ import ManageUsers from '../pages/Dashboard/Admin/ManageDecorators'
 import Profile from '../pages/Dashboard/Common/Profile'
 import Statistics from '../pages/Dashboard/Common/overview'
 import MainLayout from '../layouts/MainLayout'
-import ManageOrders from '../pages/Dashboard/Decorator/MyAssigendProject'
 import { createBrowserRouter } from 'react-router'
 import ManageServices from '../pages/Dashboard/Admin/ManageServices'
 import ServicesPage from '../pages/Services/ServicesPage'
@@ -25,6 +24,8 @@ import DecoratorEarnings from '../pages/Dashboard/Decorator/DecoratorEarnings'
 import CoverageMap from '../pages/CoverageMap/CoverageMap'
 import About from '../pages/About/About'
 import Contact from '../pages/Contact/Contact'
+import AdminRoute from './AdminRoute'
+import DecoratorRoute from './DecoratorRoute'
 
 export const router = createBrowserRouter([
   {
@@ -85,7 +86,9 @@ export const router = createBrowserRouter([
         path: 'manage-services',//admin
         element: (
           <PrivateRoute>
-            <ManageServices></ManageServices>
+            <AdminRoute>
+              <ManageServices></ManageServices>
+            </AdminRoute>
           </PrivateRoute>
         ),
       },
@@ -93,7 +96,9 @@ export const router = createBrowserRouter([
         path: 'my-assigned-projects', //decorator
         element: (
           <PrivateRoute>
-            <MyAssigendProject></MyAssigendProject>
+            <DecoratorRoute>
+              <MyAssigendProject></MyAssigendProject>
+            </DecoratorRoute>
           </PrivateRoute>
         ),
       },
@@ -101,7 +106,9 @@ export const router = createBrowserRouter([
         path: 'today-schedule', //decorator
         element: (
           <PrivateRoute>
-            <TodaySchedule></TodaySchedule>
+            <DecoratorRoute>
+              <TodaySchedule></TodaySchedule>
+            </DecoratorRoute>
           </PrivateRoute>
         ),
       },
@@ -109,7 +116,9 @@ export const router = createBrowserRouter([
         path: 'decorator-earnings', //decorator
         element: (
           <PrivateRoute>
-            <DecoratorEarnings></DecoratorEarnings>
+            <DecoratorRoute>
+              <DecoratorEarnings></DecoratorEarnings>
+            </DecoratorRoute>
           </PrivateRoute>
         ),
       },
@@ -117,7 +126,9 @@ export const router = createBrowserRouter([
         path: 'manage-Decorators',//admin 
         element: (
           <PrivateRoute>
-            <ManageDecorators></ManageDecorators>
+            <AdminRoute>
+              <ManageDecorators></ManageDecorators>
+            </AdminRoute>
           </PrivateRoute>
         ),
       },
@@ -125,7 +136,9 @@ export const router = createBrowserRouter([
         path: 'manage-Bookings',//admin 
         element: (
           <PrivateRoute>
-            <ManageBookings></ManageBookings>
+            <AdminRoute>
+              <ManageBookings></ManageBookings>
+            </AdminRoute>
           </PrivateRoute>
         ),
       },
@@ -133,7 +146,9 @@ export const router = createBrowserRouter([
         path: 'revenue-monitoring',//admin 
         element: (
           <PrivateRoute>
-            <RevenueMonitoring></RevenueMonitoring>
+            <AdminRoute>
+              <RevenueMonitoring></RevenueMonitoring>
+            </AdminRoute>
           </PrivateRoute>
         ),
       },
@@ -155,11 +170,9 @@ export const router = createBrowserRouter([
       },
       {
         path:'payment-history', //customer
-        element:<PaymentHistoryPage></PaymentHistoryPage>
-      },
-      {
-        path: 'manage-orders',
-        element: <ManageOrders />,
+        element:<PrivateRoute>
+          <PaymentHistoryPage></PaymentHistoryPage>
+        </PrivateRoute>
       },
     ],
   },

@@ -19,7 +19,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="fixed w-full z-20 bg-white border-b border-base-300 shadow-sm">
+    <div className="fixed w-full z-100 bg-white border-b border-base-300 shadow-sm">
       <div className="py-3">
         <Container>
           <div className="flex items-center justify-between">

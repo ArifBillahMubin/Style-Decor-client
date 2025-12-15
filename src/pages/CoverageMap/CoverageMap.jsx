@@ -3,7 +3,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { FiSearch } from "react-icons/fi";
 
-const position = [23.8103, 90.4125]; // Bangladesh center
+const position = [23.8103, 90.4125]; 
 
 const CoverageMap = () => {
     const [areas, setAreas] = useState([]);
@@ -72,11 +72,7 @@ const CoverageMap = () => {
 
                         <button
                             type="submit"
-                            className="
-                btn bg-primary text-white
-                font-semibold rounded-r-full px-8
-                hover:bg-secondary transition
-              "
+                            className="btn bg-primary text-white font-semibold rounded-r-full px-8 hover:bg-secondary transition"
                         >
                             Search
                         </button>
@@ -85,18 +81,13 @@ const CoverageMap = () => {
 
                 {/* Map */}
                 <div
-                    className="
-            rounded-2xl overflow-hidden
-            border border-base-300
-            shadow-xl
-            h-[600px]
-          "
+                    className="rounded-2xl overflow-hidden border border-base-300 shadow-xl h-[600px]"
                 >
                     <MapContainer
                         center={position}
                         zoom={7}
                         scrollWheelZoom={true}
-                        className="h-full w-full"
+                        className="h-full w-full overflow-hidden z-2"
                         ref={mapRef}
                     >
                         <TileLayer

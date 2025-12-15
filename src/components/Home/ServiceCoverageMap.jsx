@@ -20,7 +20,7 @@ const ServiceCoveragePreview = () => {
 
 
     return (
-        <section className="py-20 bg-base-100">
+        <section className="py-20 bg-base-100 overflow-hidden">
             <div className="max-w-7xl mx-auto px-4">
 
                 {/* Header */}
@@ -48,7 +48,7 @@ const ServiceCoveragePreview = () => {
                         center={position}
                         zoom={7}
                         scrollWheelZoom={false}
-                        className="h-full w-full"
+                        className="h-full w-full overflow-hidden z-2"
                         ref={mapRef}
                     >
                         <TileLayer
