@@ -3,7 +3,7 @@ import LoadingSpinner from '../components/Shared/LoadingSpinner'
 import useRole from '../hooks/useRole'
 
 const DecoratorRoute = ({ children }) => {
-    const [role, isRoleLoading] = useRole()
+    const {role, isRoleLoading} = useRole()
 
     if (isRoleLoading) return <LoadingSpinner />
     if (role === 'decorator') return children
