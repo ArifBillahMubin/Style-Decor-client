@@ -29,9 +29,9 @@ const SignUp = () => {
   // Handle form submit
   const onSubmit = async (data) => {
     const { name, email, password, image } = data;
-    console.log(data);
+    // console.log(data);
     const imageFile = image[0];
-    console.log(imageFile);
+    // console.log(imageFile);
 
     try {
       // Upload image to imageBb
@@ -51,7 +51,7 @@ const SignUp = () => {
       navigate(from, { replace: true });
       toast.success("Signup Successful");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error(err?.message);
     }
   };
@@ -67,7 +67,7 @@ const SignUp = () => {
       navigate(from, { replace: true });
       toast.success("Signup Successful");
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error(err?.message);
     }
   };

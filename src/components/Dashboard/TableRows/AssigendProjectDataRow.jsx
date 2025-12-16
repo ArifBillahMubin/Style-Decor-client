@@ -1,5 +1,5 @@
-import axios from "axios";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const STATUS_OPTIONS = [
   "assigned",
@@ -20,6 +20,7 @@ const STATUS_LABEL = {
 };
 
 const AssigendProjectDataRow = ({ booking, refetch }) => {
+  const axiosSecure = useAxiosSecure();
   const {
     _id,
     serviceName,
@@ -42,8 +43,8 @@ const AssigendProjectDataRow = ({ booking, refetch }) => {
       confirmButtonText: "Update"
     }).then((res) => {
       if (res.isConfirmed) {
-        axios
-          .patch(`${import.meta.env.VITE_API_URL}/decorator/projects/status/${_id}`, {
+        axiosSecure
+          .patch(`/decorator/projects/status/${_id}`, {
             status: newStatus
           })
           .then(() => {

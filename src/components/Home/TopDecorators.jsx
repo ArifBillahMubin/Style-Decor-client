@@ -1,8 +1,40 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import {
+    FaStar,
+    FaMapMarkerAlt,
+    FaClock,
+    FaBriefcase
+} from "react-icons/fa";
 import { motion } from "framer-motion";
-import { FaStar } from "react-icons/fa";
 import Container from "../Shared/Container";
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.25
+        }
+    }
+};
+
+const cardVariants = {
+    hidden: {
+        opacity: 0,
+        y: 40,
+        scale: 0.97
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: {
+            duration: 0.6,
+            ease: "easeOut"
+        }
+    }
+};
 
 const TopDecorators = () => {
     const { data: decorators = [], isLoading } = useQuery({
@@ -17,78 +49,134 @@ const TopDecorators = () => {
 
     if (isLoading || decorators.length === 0) return null;
 
-    // duplicate for infinite loop
-    const loopData = [...decorators, ...decorators];
+    const featuredDecorators = decorators.slice(0, 2);
 
     return (
-        <section className="py-16 bg-base-100 overflow-hidden">
+        <section className="py-28 bg-base-100">
             <Container>
+
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-14"
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="text-center mb-20"
                 >
-                    <h2 className="text-4xl font-bold text-secondary">
+                    <h2 className="text-5xl font-bold text-secondary">
                         Top Decorators
                     </h2>
-                    <p className="text-gray-500 mt-3 max-w-xl mx-auto">
-                        Trusted professionals delivering elegant decoration services
+                    <p className="mt-4 text-base-content/60 text-lg">
+                        Trusted professionals delivering premium decoration experiences
                     </p>
                 </motion.div>
 
-                {/* Viewport (shows only 3 cards) */}
-                <div className="overflow-hidden">
-                    <motion.div
-                        className="flex gap-8"
-                        animate={{ x: ["0%", "-50%"] }}
-                        transition={{
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: 25,
-                            ease: "linear",
-                        }}
-                    >
-                        {loopData.map((decorator, index) => (
-                            <div
-                                key={index}
-                                className="min-w-[220px] md:min-w-[260px] lg:min-w-[320px] bg-base-10 rounded-2xl p-5 md:p-6 lg:p-8 border border-base-300 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center gap-3 md:gap-4"
-                            >
+                {/* Cards */}
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    className="grid lg:grid-cols-2 gap-14"
+                >
+                    {featuredDecorators.map((decorator, index) => (
+                        <motion.div
+                            key={index}
+                            variants={cardVariants}
+                            whileHover={{
+                                y: -6,
+                                transition: { duration: 0.3 }
+                            }}
+                            className="
+                                relative rounded-3xl p-10
+                                bg-base-200/70 backdrop-blur
+                                border-l-8 border-primary
+                                shadow-lg hover:shadow-2xl
+                                transition-shadow duration-300
+                            "
+                        >
+                            {/* Top Row */}
+                            <div className="flex items-center gap-6">
                                 {/* Avatar */}
                                 <img
                                     src={decorator.imageURL}
                                     alt={decorator.name}
-                                    className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full object-cover ring-4 ring-primary/30"
+                                    className="w-20 h-20 rounded-full object-cover ring-4 ring-primary/30"
                                 />
 
-                                {/* Name */}
-                                <h3 className="text-sm md:text-base lg:text-lg font-semibold text-gray-800">
-                                    {decorator.name}
-                                </h3>
+                                {/* Name + Rating */}
+                                <div className="flex-1">
+                                    <h3 className="text-2xl font-semibold text-base-content">
+                                        {decorator.name}
+                                    </h3>
+                                    <p className="text-sm text-base-content/60">
+                                        Wedding & Event Decorator
+                                    </p>
 
-                                {/* Email */}
-                                <p className="text-[11px] md:text-xs text-gray-400 truncate w-full">
-                                    {decorator.email}
-                                </p>
-
-                                {/* Rating */}
-                                <div className="flex gap-1 text-yellow-400 text-sm">
-                                    <FaStar /><FaStar /><FaStar /><FaStar />
-                                    <FaStar className="text-gray-300" />
+                                    <div className="flex items-center gap-1 text-yellow-400 mt-1 text-sm">
+                                        <FaStar /><FaStar /><FaStar /><FaStar />
+                                        <FaStar className="text-base-300" />
+                                        <span className="ml-2 text-base-content/60">
+                                            4.8
+                                        </span>
+                                    </div>
                                 </div>
-
-                                {/* Divider */}
-                                <div className="w-10 h-[2px] bg-primary/30 rounded-full" />
-
-                                {/* Specialty */}
-                                <p className="text-xs md:text-sm text-gray-600">
-                                    Wedding • Home • Event Decoration
-                                </p>
                             </div>
-                        ))}
-                    </motion.div>
-                </div>
+
+                            {/* Meta Row */}
+                            <div className="flex flex-wrap gap-8 mt-6 text-sm text-base-content/70">
+                                <div className="flex items-center gap-2">
+                                    <FaMapMarkerAlt className="text-primary" />
+                                    Dhaka
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <FaClock className="text-primary" />
+                                    Fast Response
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <FaBriefcase className="text-primary" />
+                                    6+ Years
+                                </div>
+                            </div>
+
+                            {/* Stats */}
+                            <div className="grid grid-cols-3 gap-6 mt-8">
+                                <div className="rounded-2xl bg-primary/10 p-4 text-center">
+                                    <p className="text-2xl font-bold text-primary">150+</p>
+                                    <p className="text-xs text-base-content/60">
+                                        Projects
+                                    </p>
+                                </div>
+                                <div className="rounded-2xl bg-secondary/10 p-4 text-center">
+                                    <p className="text-2xl font-bold text-secondary">6 yrs</p>
+                                    <p className="text-xs text-base-content/60">
+                                        Experience
+                                    </p>
+                                </div>
+                                <div className="rounded-2xl bg-accent/10 p-4 text-center">
+                                    <p className="text-2xl font-bold text-accent">৳25k</p>
+                                    <p className="text-xs text-base-content/60">
+                                        Starting
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-3 mt-8">
+                                <span className="px-4 py-1.5 rounded-full text-sm bg-primary/10 text-primary">
+                                    Wedding
+                                </span>
+                                <span className="px-4 py-1.5 rounded-full text-sm bg-secondary/10 text-secondary">
+                                    Event
+                                </span>
+                                <span className="px-4 py-1.5 rounded-full text-sm bg-accent/10 text-accent">
+                                    Home Decor
+                                </span>
+                            </div>
+                        </motion.div>
+                    ))}
+                </motion.div>
+
             </Container>
         </section>
     );

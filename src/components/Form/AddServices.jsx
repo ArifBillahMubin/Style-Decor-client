@@ -22,7 +22,7 @@ const AddServices = ({ refetch }) => {
 
     onError: (error) => {
       toast.error(error?.response?.data?.message || "Something went wrong");
-      console.log(error);
+      // console.log(error);
     },
   });
 

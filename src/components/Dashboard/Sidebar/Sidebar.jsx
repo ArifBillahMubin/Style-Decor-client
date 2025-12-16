@@ -7,7 +7,7 @@ import logo from "../../../assets/images/logo.png";
 import { GrLogout } from "react-icons/gr";
 import { FcSettings } from "react-icons/fc";
 import { AiOutlineBars } from "react-icons/ai";
-import { BsGraphUp } from "react-icons/bs";
+import { CiViewBoard } from "react-icons/ci";
 
 // User Menu
 import MenuItem from "./Menu/MenuItem";
@@ -70,7 +70,7 @@ const Sidebar = () => {
 
               {/* Common Menu */}
               <MenuItem
-                icon={BsGraphUp}
+                icon={CiViewBoard}
                 label="Overview"
                 address="/dashboard"
               />
