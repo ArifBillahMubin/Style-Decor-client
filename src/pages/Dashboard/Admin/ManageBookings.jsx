@@ -5,7 +5,7 @@ import LoadingSpinner from "../../../components/Shared/LoadingSpinner";
 import Pagination from "../../../Pagination/Pagination";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 5;
 
 const ManageBookings = () => {
     const axiosSecure = useAxiosSecure();

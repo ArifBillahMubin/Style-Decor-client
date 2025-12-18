@@ -3,8 +3,10 @@ import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
+  const navigation = useNavigate();
   const {
     _id,
     service_name,
@@ -54,6 +56,7 @@ const PurchaseModal = ({ isOpen, closeModal, service, user }) => {
       .then(() => {
         toast.success("Booking saved successfully!");
         closeModal();
+        navigation("/dashboard/my-bookings");
       })
       .catch(() => {
         toast.error("Booking failed. Try again.");
